@@ -19,7 +19,7 @@ Clean()
 {
   echo "delete objects"
   find . -name '*.pyc' -exec rm -v -f -R {} \;
-  find . -name '*.log' -exec rm -v -f -R {} \;
+  #find . -name '*.log' -exec rm -v -f -R {} \;
   find . -name '__pycache__' -exec rm -v -f -R {} \;
 
   echo
