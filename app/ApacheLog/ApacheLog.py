@@ -1,12 +1,26 @@
+'''
+apache web server log analyzer
+2022.04.08
+
+sudo apt install geoip-bin
+geoiplookup 8.8.8.8
+'''
+
+
 import os
 import re
 import socket
 import json
+import subprocess
 
 
 class TApache():
     def __init__(self):
         self.Data = {}
+
+    def GetCountryByIp(self, aIp: str) -> str:
+        Data = subprocess.run(['geoiplookup', aIp], stdout=subprocess.PIPE, text=True)
+        return Data.stdout.split(':')[-1].strip()
 
     def GetHostByIp(self, aIp: str) -> str:
         try:
@@ -37,10 +51,9 @@ class TApache():
         return sorted(Res.items(), key = lambda k: k[1], reverse=False)
 
     def LoadLog(self, aFile: str):
-        Me = 'http://oster.com.ua'
-        reHost = re.compile('(\d+\-\d+\-\d+\-\d+)\.(.*)')
         reRec = re.compile('(\d+\.\d+\.\d+\.\d+).*(\[.*\])(.*)')
         reUrl = re.compile('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+')
+        reHost = re.compile('(\d+\-\d+\-\d+\-\d+)\.(.*)')
 
         with open(aFile, 'r') as F:
             for Line in F.readlines():
@@ -60,7 +73,7 @@ class TApache():
                             Arr = Host.split('.')
                             HostBase = '.'.join(Arr[-2:])
                     else:
-                        HostBase = ''
+                        HostBase = Ip
 
                     rBot = reUrl.findall(rLine[2])
                     if (rBot):
@@ -68,44 +81,50 @@ class TApache():
                     else:
                         Bot = ''
 
-                    Rec = [1, Host, HostBase, Bot]
+                    Rec = [1, Host, HostBase, Bot, self.GetCountryByIp(Ip)]
                     self.Data[Ip] = Rec
-                    print(len(self.Data), Ip, Rec)
+                    print('%4s, %15s %s' % (len(self.Data), Ip, Rec))
 
     def LoadLogs(self, aFile: list):
         for File in aFile:
-            self.LoadFile(File)
+            print()
+            print(File)
+            self.LoadLog(File)
 
+    def LoadLogMask(self, aVal: str):
+        Arr = [x for x in os.listdir('.') if (aVal in x)]
+        self.LoadLogs(sorted(Arr))
 
     def Info_Ip(self):
         Cnt = 0
         Arr = self.Sort(0)
         for Ip, Data in Arr:
             Cnt += Data[0]
-            print(Ip, Data)
+            print('%15s %s' % (Ip, Data))
         print('All %s, Ip %s, %s' % (Cnt, len(self.Data), len(Arr)))
 
     def Info_Host(self, aIdx: int = 2):
         Cnt = 0
-        Arr = Apache.Count(aIdx)
+        Arr = self.Count(aIdx)
         for Key, Val in Arr:
             Cnt += Val
-            print(Val, Key)
+            print('%3s %s' % (Val, Key))
         print('All %s, Ip %s, %s' % (Cnt, len(self.Data), len(Arr)))
 
 
+def Main():
+    Apache = TApache()
+    #Apache.LoadLogMask('.log')
+    #Apache.LoadLog('access.log')
+    #Apache.Save('access.log.json')
 
-#os.system('clear')
+    Apache.Load('access.log.json')
+    print()
+    Apache.Info_Ip()
+    for i in [2,4]:
+        print()
+        Apache.Info_Host(i)
 
-File = '3w_oster.com.ua_access.log.8'
-Apache = TApache()
-#Apache.LoadLog(File)
-#Apache.Save(File + '.json')
-Apache.Load(File + '.json')
-#print()
-#Apache.Info_Ip()
-print()
-Apache.Info_Host(2)
-#print()
-#Apache.Info_Host(3)
-
+if (__name__ == '__main__'):
+    os.system('clear')
+    Main()
