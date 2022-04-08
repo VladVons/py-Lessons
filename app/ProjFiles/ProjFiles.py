@@ -80,7 +80,8 @@ class TProjFiles():
 
 def Project_1():
     PF = TProjFiles()
-    PF.FilesLoad(['vRelaySrv.py', 'App/Scraper/__init__.py', 'App/ScraperSrv/__init__.py'])
+    #PF.FilesLoad(['vRelaySrv.py', 'App/Scraper/__init__.py', 'App/ScraperSrv/__init__.py'])
+    PF.FilesLoad(['vRelaySrv.py', 'App/WebSrv/__init__.py', 'App/WebSrv/form/soup.py'])
     PF.DirsLoad(['Conf'])
     PF.Release()
 
