@@ -4,7 +4,7 @@ Created:     2022.03.30
 License:     GNU, see LICENSE for more details
 Description:
 
-Search project dependencies from a file or directory  
+Search project dependencies from a file or directory
 '''
 
 
@@ -42,16 +42,17 @@ class TProjFiles():
         #Patt3 = '__import__\((.*)\)'
 
         if (os.path.exists(aFile)):
-            with open(aFile, 'r') as F:
-                for Line in F.readlines():
-                    Find = re.findall(Patt1 + '|' + Patt2, Line)
-                    if (Find) and (not Line.startswith('#')):
-                        F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
-                        if (F1):
-                            self._Find(aFile, F1.split(','))
-                        else:
-                            self._Find(aFile, F2.split(','), F3.split(','))
-            self._FileAdd(aFile)
+            if (not self._Filter(aFile)):
+                with open(aFile, 'r') as F:
+                    for Line in F.readlines():
+                        Find = re.findall(Patt1 + '|' + Patt2, Line)
+                        if (Find) and (not Line.startswith('#')):
+                            F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
+                            if (F1):
+                                self._Find(aFile, F1.split(','))
+                            else:
+                                self._Find(aFile, F2.split(','), F3.split(','))
+                self._FileAdd(aFile)
         else:
             print('File not found', aFile)
 
@@ -59,30 +60,41 @@ class TProjFiles():
         for File in aFiles:
             self.FileLoad(File)
 
-    def DirsLoad(self, aDirs: list):
+    def DirsLoad(self, aDirs: list, aAll: bool = False):
         for Dir in aDirs:
-            for Root, Subdirs, Files in os.walk(Dir):
+            for Root, Dirs, Files in os.walk(Dir):
                 for File in Files:
-                    self.FileLoad(Root + '/' + File)
+                    Path = Root + '/' + File
+                    if (aAll):
+                        if (not Path in self.Files) and (not self._Filter(Path)):
+                            self.Files.append(Path)
+                    else:
+                        self.FileLoad(Path)
+
+                if (aAll):
+                    self.DirsLoad(Dirs, aAll)
 
     def Release(self, aDir: str = 'Release'):
         SizeTotal = 0
         for Idx, File in enumerate(sorted(self.Files)):
             Dir = aDir + '/' + os.path.dirname(File)
             os.makedirs(Dir, exist_ok=True)
-            shutil.copy(File, aDir + '/' + File) 
+            shutil.copy(File, aDir + '/' + File)
 
             Size = os.path.getsize(File)
-            SizeTotal += Size 
+            SizeTotal += Size
             print('%2d, %4.2fk, %s' % (Idx + 1, Size / 1000, File))
         print('Size %4.2fk' % (SizeTotal / 1000))
 
 
 def Project_1():
     PF = TProjFiles()
-    #PF.FilesLoad(['vRelaySrv.py', 'App/Scraper/__init__.py', 'App/ScraperSrv/__init__.py'])
-    PF.FilesLoad(['vRelaySrv.py', 'App/WebSrv/__init__.py', 'App/WebSrv/form/soup.py'])
+    PF.FilesLoad(['vRelaySrv.py',])
     PF.DirsLoad(['Conf'])
+
+    PF.DirsLoad(['App/WebSrv'], True)
+    #PF.FilesLoad(['App/Scraper/__init__.py', 'App/ScraperSrv/__init__.py'])
+
     PF.Release()
 
 

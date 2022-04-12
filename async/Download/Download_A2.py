@@ -41,16 +41,17 @@ class TDownload():
             print('Main. launch tasks')
             return await asyncio.gather(*Tasks)
 
-    async def LoadFromFile(self, aFile: str):
+    async def LoadFromFile(self, aFile: str, aTail: str = ''):
         with open(aFile, 'r') as F:
             List = F.read().splitlines()
-            List = ['%s/sitemap.xml' % i for i in List]
+            List = ['%s%s' % (i, aTail) for i in List]
             Res = await self.Get(List)
             for i in Res:
                 print(i)
 
 
 StartT = time.time()
-Task = TDownload().LoadFromFile('hotline_min.txt')
+#Task = TDownload().LoadFromFile('hotline_1.txt', '/sitemap.xml')
+Task = TDownload().LoadFromFile('hotline_1.txt', '/robots.txt')
 asyncio.run(Task)
 print('async duration (s)', round(time.time() - StartT, 2))
