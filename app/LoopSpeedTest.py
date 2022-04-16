@@ -1,5 +1,6 @@
 '''
-python loop speed test 
+python lesson.
+loop speed test 
 2022.01.29
 
 Output:

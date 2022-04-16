@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-# 2022.01.27
-
+'''
+2022.01.27, vladvons@gmail.com
+'''
 
 import random
 
@@ -46,6 +47,7 @@ def PrintB(aStart, aEnd, aPlayers):
         print('Player %s, Tasks %s' % (Idx + 1, sorted(Task)))
 
 
+print()
 #PlayerTask = TPlayerTask(1, 16, 3)
 
 #PlayerTask.PrintA()

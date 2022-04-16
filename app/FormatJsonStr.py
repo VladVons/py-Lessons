@@ -1,5 +1,6 @@
 '''
-Python lesson. Format lines on brackets [] {}
+Python lesson. 
+Format lines on brackets [] {}
 VladVons@gmail.com, 2022.04.14
 '''
 

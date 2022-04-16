@@ -1,5 +1,6 @@
 '''
-Python lesson. Download url
+Python lesson. 
+Download url
 VladVons@gmail.com, 2022.04.15
 '''
 
