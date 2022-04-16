@@ -18,25 +18,27 @@ class TDownload():
         with open(aName, 'wb') as FileH:
             FileH.write(aData)
 
-    async def Fetch(self, aUrl: str, aSession, aIdx: int) -> tuple:
+    async def Fetch(self, aUrl: str, aSession, aSem, aIdx: int) -> tuple:
         try:
-            async with aSession.get(aUrl) as Response:
-                print('Fetch', aIdx, aUrl)
-                Data = await Response.read()
-                if (Response.status == 200):
-                    Path = urlparse(aUrl)
-                    File = ('f_%s%s' % (Path.netloc, Path.path)).replace('/', '_')
-                    self.WriteFile(File, Data)
-                else:
-                    print('Err', Response.status, aUrl)
+            async with aSem:
+                async with aSession.get(aUrl) as Response:
+                    print('Fetch', aIdx, aUrl)
+                    Data = await Response.read()
+                    if (Response.status == 200):
+                        Path = urlparse(aUrl)
+                        File = ('f_%s%s' % (Path.netloc, Path.path)).replace('/', '_')
+                        self.WriteFile(File, Data)
+                    else:
+                        print('Err', Response.status, aUrl)
                 return (Response.status, aUrl)
         except Exception as E:
             print('Err:', E)
 
-    async def Get(self, aUrl: list):
+    async def Get(self, aUrl: list, aMaxConn: int = 5):
+        Sem = asyncio.Semaphore(aMaxConn)
         async with aiohttp.ClientSession() as Session:
             print('Main. create tasks', len(aUrl))
-            Tasks = [asyncio.create_task(self.Fetch(Val, Session, Idx)) for Idx, Val in enumerate(aUrl)]
+            Tasks = [asyncio.create_task(self.Fetch(Val, Session, Sem, Idx)) for Idx, Val in enumerate(aUrl)]
 
             print('Main. launch tasks')
             return await asyncio.gather(*Tasks)
@@ -44,14 +46,15 @@ class TDownload():
     async def LoadFromFile(self, aFile: str, aTail: str = ''):
         with open(aFile, 'r') as F:
             List = F.read().splitlines()
-            List = ['%s%s' % (i, aTail) for i in List]
-            Res = await self.Get(List)
-            for i in Res:
-                print(i)
+        List = ['%s%s' % (i, aTail) for i in List]
+        Res = await self.Get(List)
+        for i in Res:
+            print(i)
 
 
 StartT = time.time()
 #Task = TDownload().LoadFromFile('hotline_1.txt', '/sitemap.xml')
 Task = TDownload().LoadFromFile('hotline_1.txt', '/robots.txt')
+#Task = TDownload().LoadFromFile('hotline_1.txt')
 asyncio.run(Task)
 print('async duration (s)', round(time.time() - StartT, 2))
