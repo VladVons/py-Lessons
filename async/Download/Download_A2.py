@@ -13,10 +13,13 @@ from urllib.parse import urlparse
 
 
 class TDownload():
+    def __init__(self, aFileTail: str = ''):
+        self.FileTail = aFileTail 
+
     def WriteFile(self, aName: str, aData):
-        print('WriteFile', aName)
-        with open(aName, 'wb') as FileH:
-            FileH.write(aData)
+        print('WriteFile', aName, len(aData))
+        with open(aName, 'wb') as F:
+            F.write(aData)
 
     async def Fetch(self, aUrl: str, aSession, aSem, aIdx: int) -> tuple:
         try:
@@ -26,13 +29,13 @@ class TDownload():
                     Data = await Response.read()
                     if (Response.status == 200):
                         Path = urlparse(aUrl)
-                        File = ('f_%s%s' % (Path.netloc, Path.path)).replace('/', '_')
+                        File = ('f_%s%s%s' % (Path.netloc, Path.path, self.FileTail)).replace('/', '_')
                         self.WriteFile(File, Data)
                     else:
                         print('Err', Response.status, aUrl)
                 return (Response.status, aUrl)
         except Exception as E:
-            print('Err:', E)
+            print('Err:', E, aUrl)
 
     async def Get(self, aUrl: list, aMaxConn: int = 5):
         Sem = asyncio.Semaphore(aMaxConn)
@@ -54,7 +57,7 @@ class TDownload():
 
 StartT = time.time()
 #Task = TDownload().LoadFromFile('hotline_1.txt', '/sitemap.xml')
-Task = TDownload().LoadFromFile('hotline_1.txt', '/robots.txt')
-#Task = TDownload().LoadFromFile('hotline_1.txt')
+#Task = TDownload().LoadFromFile('hotline_1.txt', '/robots.txt')
+Task = TDownload('.html').LoadFromFile('hotline_1.txt')
 asyncio.run(Task)
 print('async duration (s)', round(time.time() - StartT, 2))
