@@ -6,6 +6,7 @@ VladVons@gmail.com
 2022.03.28
 '''
 
+import os
 import time
 import asyncio
 import aiohttp
@@ -13,12 +14,15 @@ from urllib.parse import urlparse
 
 
 class TDownload():
-    def __init__(self, aFileTail: str = ''):
-        self.FileTail = aFileTail 
+    def __init__(self, aFileTail: str = '', aDirOut: str = 'Out'):
+        self.FileTail = aFileTail
+        self.DirOut = aDirOut
+        if (aDirOut != '.'):
+            os.mkdir(aDirOut)
 
     def WriteFile(self, aName: str, aData):
         print('WriteFile', aName, len(aData))
-        with open(aName, 'wb') as F:
+        with open(self.DirOut + '/' + aName, 'wb') as F:
             F.write(aData)
 
     async def Fetch(self, aUrl: str, aSession, aSem, aIdx: int) -> tuple:
@@ -29,7 +33,7 @@ class TDownload():
                     Data = await Response.read()
                     if (Response.status == 200):
                         Path = urlparse(aUrl)
-                        File = ('f_%s%s%s' % (Path.netloc, Path.path, self.FileTail)).replace('/', '_')
+                        File = ('%s%s%s' % (Path.netloc, Path.path, self.FileTail)).replace('/', '_')
                         self.WriteFile(File, Data)
                     else:
                         print('Err', Response.status, aUrl)
@@ -51,8 +55,8 @@ class TDownload():
             List = F.read().splitlines()
         List = ['%s%s' % (i, aTail) for i in List]
         Res = await self.Get(List)
-        for i in Res:
-            print(i)
+        for Idx, Val in enumerate(Res):
+            print(Idx, Val)
 
 
 StartT = time.time()
