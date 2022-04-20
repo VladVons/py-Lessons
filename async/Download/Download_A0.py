@@ -29,10 +29,6 @@ async def Task_2():
 
 async def Main():
     print('Welcome to python async !')
-
-    Tasks = []
-    Tasks.append(Task_1())
-    Tasks.append(Task_2())
-    await asyncio.gather(*Tasks)
+    await asyncio.gather(Task_1(), Task_2())
 
 asyncio.run(Main())
