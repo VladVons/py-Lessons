@@ -7,7 +7,7 @@ VladVons@gmail.com, 2022.04.21
 import PIL.Image
 
 
-def LoadFile(aFile: str, aWidth: int = 120) -> str:
+def LoadFile(aFile: str, aWidth: int = 150) -> str:
     Img = PIL.Image.open(aFile)
 
     Width, Height = Img.size
@@ -36,9 +36,14 @@ def LoadFile(aFile: str, aWidth: int = 120) -> str:
     Res = '\n'.join(Arr)
     return Res
 
-File = 'cup_of_coffee.jpg'
-Text = LoadFile(File, 160)
-FileOut = File + '.txt'
-with open(FileOut, 'w') as F:
-    F.write(Text)
-print('Saved to', FileOut)
+def SaveFile(File: str, aData):
+    with open(FileOut, 'w') as F:
+        F.write(aData)
+
+if (__name__ == '__main__'):
+    File = 'cup_of_coffee.jpg'
+    Text = LoadFile(File, 160)
+
+    FileOut = File + '.txt'
+    SaveFile(FileOut, Text)
+    print('Saved to', FileOut)
