@@ -4,21 +4,29 @@ picture to ASCII
 VladVons@gmail.com, 2022.04.21
 '''
 
+import random
 import PIL.Image
 
+
+def GetRandStr(aLen: int) -> str:
+    Ascii = [chr(i) for i in range(33, 126)]
+    Rand = random.sample(Ascii, aLen)
+    return ''.join(Rand)
 
 def LoadFile(aFile: str, aWidth: int = 150) -> str:
     Img = PIL.Image.open(aFile)
 
     Width, Height = Img.size
     Ratio = Height / Width
-    NewHeight = Ratio * aWidth * 0.6
+    NewHeight = Ratio * aWidth * 0.45
     Img = Img.resize((aWidth, int(NewHeight)))
     GrayScale = Img.convert('L')
     Pixels = GrayScale.getdata()
 
     #Chars = 'DavidVons20@7=*+,.'
-    Chars = 'DavidVons20@7'
+    Chars = GetRandStr(20)
+    print(Chars)
+
     Ratio = 255 / (len(Chars) - 1)
     Pixels = GrayScale.getdata()
     Arr = []
@@ -42,7 +50,8 @@ def SaveFile(File: str, aData):
 
 if (__name__ == '__main__'):
     File = 'cup_of_coffee.jpg'
-    Text = LoadFile(File, 160)
+    File = 'DSC_1684-2.JPG'
+    Text = LoadFile(File, 120)
 
     FileOut = File + '.txt'
     SaveFile(FileOut, Text)
