@@ -23,8 +23,9 @@ def LoadFile(aFile: str, aWidth: int = 150) -> str:
     GrayScale = Img.convert('L')
     Pixels = GrayScale.getdata()
 
+    Chars = gscale1 = '@%#*+=-:. '
     #Chars = 'DavidVons20@7=*+,.'
-    Chars = GetRandStr(20)
+    #Chars = GetRandStr(20)
     print(Chars)
 
     Ratio = 255 / (len(Chars) - 1)
@@ -50,8 +51,7 @@ def SaveFile(File: str, aData):
 
 if (__name__ == '__main__'):
     File = 'cup_of_coffee.jpg'
-    File = 'DSC_1684-2.JPG'
-    Text = LoadFile(File, 120)
+    Text = LoadFile(File, 150)
 
     FileOut = File + '.txt'
     SaveFile(FileOut, Text)
