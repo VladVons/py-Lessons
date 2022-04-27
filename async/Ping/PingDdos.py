@@ -4,9 +4,10 @@ VladVons@gmail.com
 2022.04.28OB
 '''
 
-
+import sys
 import asyncio
 import aioping
+
 
 class TPingDdos():
     async def Ping(self, aHost: str):
@@ -33,5 +34,10 @@ class TPingDdos():
         await asyncio.gather(*Tasks)
 
 
-Task = TPingDdos().Run('192.168.12.214', 100)
-asyncio.run(Task)
+if (__name__ == '__main__'):
+    if (len(sys.argv) == 3):
+        App, Host, Count = sys.argv
+        Task = TPingDdos().Run(Host, int(Count))
+        asyncio.run(Task)
+    else:
+        print('Syntax ex.: sudo python3 PingDdos.py 8.8.8.8 100')
