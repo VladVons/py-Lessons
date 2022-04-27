@@ -14,9 +14,16 @@ import shutil
 
 
 class TProjFiles():
-    def __init__(self):
+    def __init__(self, aSrc: str = ''):
         self.Filter = '.*\.log|.*\.pyc'
         self.Files = []
+        self.Lines = 0
+
+        if (aSrc):
+            self.Dst = os.getcwd() + '/'
+            os.chdir(aSrc)
+        else:
+            self.Dst = './'
 
     def _Filter(self, aFile: str) -> bool:
         if (self.Filter):
@@ -44,7 +51,9 @@ class TProjFiles():
         if (os.path.exists(aFile)):
             if (not self._Filter(aFile)):
                 with open(aFile, 'r') as F:
-                    for Line in F.readlines():
+                    Lines = F.readlines()
+                    self.Lines += len(Lines)
+                    for Line in Lines:
                         Find = re.findall(Patt1 + '|' + Patt2, Line)
                         if (Find) and (not Line.startswith('#')):
                             F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
@@ -58,16 +67,23 @@ class TProjFiles():
 
     def FilesLoad(self, aFiles: list):
         for File in aFiles:
-            self.FileLoad(File)
+            if (not File.startswith('-')):
+                self.FileLoad(File)
 
     def DirsLoad(self, aDirs: list, aAll: bool = False):
         for Dir in aDirs:
+            if (Dir.startswith('-')):
+                continue
+
             for Root, Dirs, Files in os.walk(Dir):
                 for File in Files:
                     Path = Root + '/' + File
                     if (aAll):
                         if (not Path in self.Files) and (not self._Filter(Path)):
-                            self.Files.append(Path)
+                            if (Path.endswith('.py')):
+                                self.FileLoad(Path)
+                            else:
+                                self.Files.append(Path)
                     else:
                         self.FileLoad(Path)
 
@@ -77,27 +93,11 @@ class TProjFiles():
     def Release(self, aDir: str = 'Release'):
         SizeTotal = 0
         for Idx, File in enumerate(sorted(self.Files)):
-            Dir = aDir + '/' + os.path.dirname(File)
+            Dir = self.Dst + aDir + '/' + os.path.dirname(File)
             os.makedirs(Dir, exist_ok=True)
-            shutil.copy(File, aDir + '/' + File)
+            shutil.copy(File, self.Dst + aDir + '/' + File)
 
             Size = os.path.getsize(File)
             SizeTotal += Size
             print('%2d, %4.2fk, %s' % (Idx + 1, Size / 1000, File))
-        print('Size %4.2fk' % (SizeTotal / 1000))
-
-
-def Project_1():
-    PF = TProjFiles()
-    PF.FilesLoad(['vRelaySrv.py',])
-    PF.DirsLoad(['Conf'])
-
-    PF.DirsLoad(['App/WebSrv'], True)
-    #PF.FilesLoad(['App/Scraper/__init__.py', 'App/ScraperSrv/__init__.py'])
-
-    PF.Release()
-
-
-if (__name__ == '__main__'):
-    os.system('clear')
-    Project_1()
+        print('Size %4.2fk, Lines: %s' % (SizeTotal / 1000, self.Lines))
