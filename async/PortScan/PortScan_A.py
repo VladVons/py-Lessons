@@ -114,9 +114,9 @@ def SpeedTest():
     print('async duration (s)', round(time.time() - StartT, 2))
 
 def Scan():
-    Ports = [80]
-    #Hosts = ['192.168.11.131', '192.168.11.132', '192.168.11.133', '192.168.11.134', '192.168.11.135', '192.168.11.136']
-    Hosts = ['192.168.2.131', '192.168.2.132']
+    #Ports = [80]
+    Ports = list(range(1000, 65536))
+    Hosts = ['192.168.12.214']
 
     PortScan = TPortScan()
     Task = PortScan.CheckRange(Hosts, Ports)
@@ -134,6 +134,5 @@ def ScanFromFile(aFile: str):
             print('%s:%s %s' % (Host, Port, Opened))
 
 #SpeedTest()
-#Scan()
-ScanFromFile('proxies.txt')
-
+Scan()
+#ScanFromFile('proxies.txt')
