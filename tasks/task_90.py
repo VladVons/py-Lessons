@@ -1,6 +1,6 @@
 '''
 write conditional class inheritance
-2022.04.07
+2022.05.07
 '''
 
 
