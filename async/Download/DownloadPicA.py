@@ -6,22 +6,31 @@ VladVons@gmail.com
 2021.03.04
 '''
 
+
+import os
 import time
 import asyncio
 import aiohttp
-import aiofile
 
 
 class TDownload():
+    def __init__(self):
+        _, Dir = os.path.split(__file__)
+        self.Dir = Dir.split('.')[0]
+        os.makedirs(self.Dir, exist_ok = True)
+
     def WriteFile(self, aName: str, aData):
-        print('WriteFile', aName)
-        with open(aName, 'wb') as FileH:
+        Path = self.Dir + '/' + aName
+        print('WriteFile', Path)
+        with open(Path, 'wb') as FileH:
             FileH.write(aData)
 
-    async def WriteFileA(self, aName: str, aData):
-        print('WriteFileA', aName)
-        async with aiofile.async_open(aName, 'wb') as FileH:
-            await FileH.write(aData)
+    #async def WriteFileA(self, aName: str, aData):
+    #    import aiofile
+    #
+    #    print('WriteFileA', aName)
+    #    async with aiofile.async_open(aName, 'wb') as FileH:
+    #        await FileH.write(aData)
 
     async def Fetch(self, aUrl: str, aSession, aCnt):
         async with aSession.get(aUrl) as Response:
