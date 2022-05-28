@@ -25,12 +25,13 @@ class TDownload():
         with open(Path, 'wb') as FileH:
             FileH.write(aData)
 
-    #async def WriteFileA(self, aName: str, aData):
-    #    import aiofile
-    #
-    #    print('WriteFileA', aName)
-    #    async with aiofile.async_open(aName, 'wb') as FileH:
-    #        await FileH.write(aData)
+    async def WriteFileA(self, aName: str, aData):
+        import aiofile
+
+        Path = self.Dir + '/' + aName
+        print('WriteFileA', Path)
+        async with aiofile.async_open(Path, 'wb') as FileH:
+            await FileH.write(aData)
 
     async def Fetch(self, aUrl: str, aSession, aCnt):
         async with aSession.get(aUrl) as Response:
@@ -50,6 +51,7 @@ class TDownload():
 
             print('Main. launch tasks', aCnt)
             await asyncio.gather(*Tasks)
+
 
 StartT = time.time()
 Task = TDownload().Main('https://loremflickr.com/800/600/girl', 100)
