@@ -34,5 +34,5 @@ class TDownload():
             self.Fetch(aUrl, i + 1)
 
 StartT = time.time()
-TDownload().Main('https://loremflickr.com/800/600/girl', 50)
+TDownload().Main('https://loremflickr.com/800/600/girl', 100)
 print('duration (s)', round(time.time() - StartT, 2))
