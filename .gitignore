@@ -1,5 +1,6 @@
 #*.log
 *.pyc
+*.mlg
 __pycache__
 .idea
 .secret.txt

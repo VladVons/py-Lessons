@@ -8,24 +8,43 @@ import glob
 from datetime import datetime
 
 
-def ReadFile(aFile: str):
-    with open(aFile, 'r', encoding="cp1251") as hFile:
-        for x in hFile.readlines():
-            if ('DocWriteNew;' in x) and ('Прих. накл' in x):
-                Words = x.split(';')
-                DateSys = datetime.strptime(Words[0], '%Y%m%d')
+class TLog():
+    def FilterOr(self, aLine: str, aFilter: list):
+        return bool([Filter for Filter in aFilter if (Filter in aLine)])
 
-                DocInfo = Words[-1].rstrip()
-                DateDoc = DocInfo.split(' ')[-2].strip()
-                DateDoc = datetime.strptime(DateDoc, '%d.%m.%Y')
-                if (DateSys != DateDoc): 
-                    DocInfo = ' '.join(DocInfo.split(' ')[:-2])
-                    Days = (DateSys.date() - DateDoc.date()).days
-                    print(Days, DateSys.date(), DateDoc.date(), DocInfo, Words[2])
+    def FilterAnd(self, aLine: str, aFilter: list):
+        for Filter in aFilter:
+            if (Filter not in aLine):
+                return False
+        return True
 
-def Main():
-    for x in glob.glob('*.mlg'):
-        print('---', x)
-        ReadFile(x)
+    def DiffDate(self, aLine: str):
+        Words = aLine.split(';')
+        DateSys = datetime.strptime(Words[0], '%Y%m%d')
 
-Main()
+        DocInfo = Words[-1].rstrip()
+        DateDoc = DocInfo.split(' ')[-2].strip()
+        DateDoc = datetime.strptime(DateDoc, '%d.%m.%Y')
+        if (DateSys != DateDoc): 
+            DocInfo = ' '.join(DocInfo.split(' ')[:-2])
+            Days = (DateSys.date() - DateDoc.date()).days
+            print(Days, DateSys.date(), DateDoc.date(), DocInfo, Words[2])
+
+    def ReadFile(self, aFile: str):
+        with open(aFile, 'r', encoding="cp1251") as hFile:
+            for Line in hFile.readlines():
+                if ('DocWriteNew;' in Line):
+                    #if (self.FilterOr(Line, ['Спис. ТМЦ', 'Прих. накл'])):
+                    #if (self.FilterAnd(Line, ['Спис. ТМЦ', 'Сичевський'])):
+                    if (self.FilterAnd(Line, ['Сичевський'])):
+                        self.DiffDate(Line)
+                        #print(Line)
+
+    def Main(self):
+        for x in sorted(glob.glob('*.mlg')):
+            print('---', x)
+            self.ReadFile(x)
+
+
+Log = TLog()
+Log.Main()
