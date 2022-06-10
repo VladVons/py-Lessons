@@ -18,6 +18,9 @@ class TLog():
                 return False
         return True
 
+    def Print(self, aData: list, aDelim: str = '\t'):
+        print(aDelim.join([str(x) for x in aData]))
+
     def DiffDate(self, aLine: str):
         Words = aLine.split(';')
         DateSys = datetime.strptime(Words[0], '%Y%m%d')
@@ -28,7 +31,7 @@ class TLog():
         if (DateSys != DateDoc): 
             DocInfo = ' '.join(DocInfo.split(' ')[:-2])
             Days = (DateSys.date() - DateDoc.date()).days
-            print(Days, DateSys.date(), DateDoc.date(), DocInfo, Words[2])
+            self.Print([Days, DateSys.date(), DateDoc.date(), DocInfo, Words[2]])
 
     def ReadFile(self, aFile: str):
         with open(aFile, 'r', encoding="cp1251") as hFile:
@@ -36,7 +39,8 @@ class TLog():
                 if ('DocWriteNew;' in Line):
                     #if (self.FilterOr(Line, ['Спис. ТМЦ', 'Прих. накл'])):
                     #if (self.FilterAnd(Line, ['Спис. ТМЦ', 'Сичевський'])):
-                    if (self.FilterAnd(Line, ['Сичевський'])):
+                    #if (self.FilterAnd(Line, ['Сичевський'])):
+                    if (self.FilterAnd(Line, ['Прих. накл', 'Сичевський'])):
                         self.DiffDate(Line)
                         #print(Line)
 

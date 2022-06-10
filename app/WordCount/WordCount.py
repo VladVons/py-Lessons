@@ -4,7 +4,8 @@ File word counter
 VladVons@gmail.com, 2022.03.01
 '''
 
-def Main(aFile: str):
+
+def Main_A(aFile: str):
     Words = {}
     WordsCnt = 0
     with open(aFile, 'r') as F:
@@ -13,11 +14,7 @@ def Main(aFile: str):
                 WordsCnt += 1
                 if (len(Word) > 3):
                     Word = Word.lower()
-                    Count = Words.get(Word, 0)
-                    if (Count == 0) :
-                        Words[Word] = 1
-                    else:
-                        Words[Word] = Count + 1
+                    Words[Word] = Words.get(Word, 0) + 1
 
     WordsSorted = sorted(Words.items(), reverse=True, key=lambda item: item[1])
     for Word in WordsSorted[:50]:
@@ -25,5 +22,5 @@ def Main(aFile: str):
     print('Words', WordsCnt)
 
 
-#Main('Noviy_zavet.txt')
-Main('Noviy_zavet_matv.txt')
+Main_A('Noviy_zavet.txt')
+#Main_A('Noviy_zavet_matv.txt')
