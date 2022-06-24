@@ -16,7 +16,7 @@ class TWords():
             self.LoadString(Data)
 
     def LoadString(self, aData: str):
-        self.Data = re.findall("[\w]+", aData)
+        self.Data = re.findall('\w+', aData)
 
     def Show(self):
         print('Words', len(self.Data))
