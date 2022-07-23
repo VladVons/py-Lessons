@@ -37,10 +37,10 @@ class TLog():
         with open(aFile, 'r', encoding="cp1251") as hFile:
             for Line in hFile.readlines():
                 if ('DocWriteNew;' in Line):
-                    #if (self.FilterOr(Line, ['Спис. ТМЦ', 'Прих. накл'])):
+                    if (self.FilterOr(Line, ['Спис. ТМЦ', 'Прих. накл', 'Расх. накл', 'Розн. накл'])):
                     #if (self.FilterAnd(Line, ['Спис. ТМЦ', 'Сичевський'])):
                     #if (self.FilterAnd(Line, ['Сичевський'])):
-                    if (self.FilterAnd(Line, ['Прих. накл', 'Сичевський'])):
+                    #if (self.FilterAnd(Line, ['Прих. накл', 'Сичевський'])):
                         self.DiffDate(Line)
                         #print(Line)
 
