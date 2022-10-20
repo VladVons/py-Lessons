@@ -1,0 +1,7 @@
+# defaults for /etc/init.d/vhttp-slow-pages
+
+#ENABLED=0
+#WORKDIR="/usr/lib/vhttp-slow-pages"
+#DAEMON="/usr/local/bin/vHttpSlowPages"
+#USER="root"
+#LOG=/var/log/vhttp-slow-pages/vhttp-slow-pages.log

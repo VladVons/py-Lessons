@@ -1,0 +1,4 @@
+*.pyc
+.idea
+vhttp_slow_pages.egg-info
+dist/

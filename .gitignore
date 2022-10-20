@@ -1,0 +1,15 @@
+*.pyc
+*.so
+*.o
+*.mlg
+*.log
+*.csv
+*.xls
+*.xlsx
+*.ods
+*.xml
+*.jpg
+__pycache__
+.idea
+.secret.txt
+*/Data/Price/

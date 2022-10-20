@@ -1,0 +1,9 @@
+'''
+print asterisks using loop
+
+    *
+   ***
+  *****
+ *******
+*********
+'''

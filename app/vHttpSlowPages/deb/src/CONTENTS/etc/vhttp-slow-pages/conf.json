@@ -1,0 +1,17 @@
+{
+   "Option": {
+        "Run": true,
+        "MaxTasks": 5,
+        "MaxLoops": 1,
+        "Sleep": 3,
+        "ExtIpCheck": "http://icanhazip.com",
+        "LogDir": "." 
+    },
+    "Hosts": [
+        "https://mazda.ua", 
+        "https://www.nissan.ua"
+    ],
+    "Proxies": [
+        "socks5://localhost:9050"
+    ]
+}

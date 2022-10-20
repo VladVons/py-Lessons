@@ -1,0 +1,10 @@
+Package: vhttp-slow-pages
+Version: 1.0.4
+Architecture: all
+Section: web
+Priority: optional
+Depends: python3, python3-pkg-resources, python3-aiohttp, python3-lxml, python3-bs4, tor
+Suggests:
+Recommends:
+Maintainer: Vladimir Vons <VladVons@gmail.com>
+Description: Relay automation
