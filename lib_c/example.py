@@ -43,6 +43,7 @@ def Test2(aLen: int):
 @DTimeIt
 def Test3(aLen: int):
     Array = list(range(aLen))
+    # slow
     Array_C = (ctypes.c_int * aLen)(*Array)
 
     # tell Python the argument and result types of function mysum

@@ -11,13 +11,16 @@ Search project dependencies from a file or directory
 import os
 import re
 import shutil
+import site
 
 
 class TProjFiles():
     def __init__(self, aSrc: str = ''):
-        self.Filter = '.*\.log|.*\.pyc'
+        self.Filter = '.*\.log|.*\.LOG'
         self.Files = []
         self.Lines = 0
+        self.ExtPkg = set()
+        self.DirExtPkg = site.getsitepackages()[0]
 
         if (aSrc):
             self.Dst = os.getcwd() + '/'
@@ -38,6 +41,11 @@ class TProjFiles():
     def _Find(self, aFileP: str , aFilesA: list, aFilesB: list = []):
         for FileA in aFilesA:
             FileA = FileA.strip()
+
+            ExtPkgPath = self.DirExtPkg + '/' + FileA
+            if (os.path.exists(ExtPkgPath)):
+                self.ExtPkg.add(FileA.split('/')[0])
+
             for FileB in aFilesB + ['__init__']:
                 self._FileAdd(FileA + '/' + FileB.strip() + '.py')
                 self._FileAdd(FileA + '.py')
@@ -50,17 +58,22 @@ class TProjFiles():
 
         if (os.path.exists(aFile)):
             if (not self._Filter(aFile)):
-                with open(aFile, 'r') as F:
-                    Lines = F.readlines()
-                    self.Lines += len(Lines)
-                    for Line in Lines:
-                        Find = re.findall(Patt1 + '|' + Patt2, Line)
-                        if (Find) and (not Line.startswith('#')):
-                            F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
-                            if (F1):
-                                self._Find(aFile, F1.split(','))
-                            else:
-                                self._Find(aFile, F2.split(','), F3.split(','))
+                try:
+                    with open(aFile, 'r') as F:
+                        Lines = F.readlines()
+                except UnicodeDecodeError:
+                    print('Not a text file', aFile)
+                    return
+
+                self.Lines += len(Lines)
+                for Line in Lines:
+                    Find = re.findall(Patt1 + '|' + Patt2, Line)
+                    if (Find) and (not Line.startswith('#')):
+                        F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
+                        if (F1):
+                            self._Find(aFile, F1.split(','))
+                        else:
+                            self._Find(aFile, F2.split(','), F3.split(','))
                 self._FileAdd(aFile)
         else:
             print('File not found', aFile)
@@ -101,3 +114,5 @@ class TProjFiles():
             SizeTotal += Size
             print('%2d, %4.2fk, %s' % (Idx + 1, Size / 1000, File))
         print('Size %4.2fk, Lines: %s' % (SizeTotal / 1000, self.Lines))
+        print()
+        print ('ExtPkg:', ' '.join(sorted(self.ExtPkg)))
