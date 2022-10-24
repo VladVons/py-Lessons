@@ -103,16 +103,36 @@ class TProjFiles():
                 if (aAll):
                     self.DirsLoad(Dirs, aAll)
 
+
+    def Requires(self, aDir: str):
+        ExtPkg = sorted(self.ExtPkg)
+        Install = 'pip3 install ' + ' '.join(ExtPkg)
+        print(Install)
+
+        File = 'requires.txt'
+        Head = [
+            '# sudo apt install python3-pip python3-dev gcc libpq-dev libffi-dev --no-install-recommends',
+            '# curl -sS https://bootstrap.pypa.io/get-pip.py | python3',
+            f'# pip3 install -r {File}',
+            ''
+        ]
+        with open(aDir + '/' + File, 'w') as F:
+            F.write('\n'.join(Head))
+            F.write('\n'.join(ExtPkg))
+            F.write('\n')
+
     def Release(self, aDir: str = 'Release'):
         SizeTotal = 0
+        DirDst = self.Dst + aDir
         for Idx, File in enumerate(sorted(self.Files)):
-            Dir = self.Dst + aDir + '/' + os.path.dirname(File)
+            Dir = DirDst + '/' + os.path.dirname(File)
             os.makedirs(Dir, exist_ok=True)
             shutil.copy(File, self.Dst + aDir + '/' + File)
 
             Size = os.path.getsize(File)
             SizeTotal += Size
-            print('%2d, %4.2fk, %s' % (Idx + 1, Size / 1000, File))
-        print('Size %4.2fk, Lines: %s' % (SizeTotal / 1000, self.Lines))
+            print('%2d, %4.1fk, %s' % (Idx + 1, Size / 1000, File))
+        print('Size %4.1fk, Lines: %s' % (SizeTotal / 1000, self.Lines))
+
         print()
-        print ('ExtPkg:', ' '.join(sorted(self.ExtPkg)))
+        self.Requires(DirDst)
