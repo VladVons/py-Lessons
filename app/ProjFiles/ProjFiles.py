@@ -11,16 +11,18 @@ Search project dependencies from a file or directory
 import os
 import re
 import shutil
-import site
+#import site
 
 
 class TProjFiles():
     def __init__(self, aSrc: str = ''):
-        self.Filter = '.*\.log|.*\.LOG'
+        self.Filter = r'.*\.log|.*\.LOG'
         self.Files = []
         self.Lines = 0
-        self.ExtPkg = set()
-        self.DirExtPkg = site.getsitepackages()[0]
+        self.PkgExt = set()
+        self.PkgInt = set()
+        self.DirPy = os.path.dirname(os.__file__)
+        #self.DirExtPkg = site.getsitepackages()
 
         if (aSrc):
             self.Dst = os.getcwd() + '/'
@@ -42,41 +44,76 @@ class TProjFiles():
         for FileA in aFilesA:
             FileA = FileA.strip()
 
-            ExtPkgPath = self.DirExtPkg + '/' + FileA
-            if (os.path.exists(ExtPkgPath)):
-                self.ExtPkg.add(FileA.split('/')[0])
-
             for FileB in aFilesB + ['__init__']:
                 self._FileAdd(FileA + '/' + FileB.strip() + '.py')
                 self._FileAdd(FileA + '.py')
                 self._FileAdd(os.path.dirname(aFileP) + FileA + '.py')
 
+    def _FileExists(self, aFiles: list) -> str:
+        for File in aFiles:
+            if (os.path.exists(File)):
+                return File
+
+    def _PkgGroup(self, aVal1: str, aVal2: str):
+        Module = aVal2 if (not aVal1) else aVal1
+        if (not Module) or (Module in self.PkgInt) or (Module in self.PkgExt):
+            return
+
+        Module = Module.strip().split(' as ')[0]
+
+        ModulePath = Module.replace('.', '/')
+        if (Module.startswith('.')) or (self._FileExists([ModulePath, ModulePath + '.py'])):
+            self.PkgInt.add(Module)
+            return
+
+        if (not self._FileExists([self.DirPy + '/' + Module, self.DirPy + '/' + Module + '.py'])):
+            self.PkgExt.add(Module)
+
+    def GetPkgExt(self) -> list:
+        return sorted(set([x.split('.')[0] for x in self.PkgExt]))
+
+
     def FileLoad(self, aFile: str):
-        Patt1 = 'import\s+(.*)'
-        Patt2 = 'from\s+(.*)\s+import\s+(.*)'
-        #Patt3 = '__import__\((.*)\)'
-
-        if (os.path.exists(aFile)):
-            if (not self._Filter(aFile)):
-                try:
-                    with open(aFile, 'r') as F:
-                        Lines = F.readlines()
-                except UnicodeDecodeError:
-                    print('Not a text file', aFile)
-                    return
-
-                self.Lines += len(Lines)
-                for Line in Lines:
-                    Find = re.findall(Patt1 + '|' + Patt2, Line)
-                    if (Find) and (not Line.startswith('#')):
-                        F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
-                        if (F1):
-                            self._Find(aFile, F1.split(','))
-                        else:
-                            self._Find(aFile, F2.split(','), F3.split(','))
-                self._FileAdd(aFile)
-        else:
+        if (not os.path.exists(aFile)):
             print('File not found', aFile)
+            return
+
+        try:
+            with open(aFile, 'r') as F:
+                Lines = F.readlines()
+        except UnicodeDecodeError:
+            #print('Not a text file', aFile)
+            return
+
+        Patt1 = r'import\s+(.*)'
+        Patt2 = r'from\s+(.*)\s+import\s+(.*)'
+        #Patt3 = r'__import__\((.*)\)'
+
+        self.Lines += len(Lines)
+
+        InComment1 = False
+        InComment2 = False
+        for Line in Lines:
+            Line = Line.strip()
+            if (not Line) or (Line.startswith('#')):
+                continue
+
+            if (Line.startswith("'''")):
+                InComment1 = not InComment1
+            if (Line.startswith('"""')):
+                InComment2 = not InComment2
+            if (InComment1 or InComment2):
+                continue
+
+            Find = re.findall(Patt1 + '|' + Patt2, Line)
+            if (Find):
+                self._PkgGroup(*Find[0][:2])
+                F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
+                if (F1):
+                    self._Find(aFile, F1.split(','))
+                else:
+                    self._Find(aFile, F2.split(','), F3.split(','))
+        self._FileAdd(aFile)
 
     def FilesLoad(self, aFiles: list):
         for File in aFiles:
@@ -105,8 +142,8 @@ class TProjFiles():
 
 
     def Requires(self, aDir: str):
-        ExtPkg = sorted(self.ExtPkg)
-        Install = 'pip3 install ' + ' '.join(ExtPkg)
+        PkgExt = self.GetPkgExt()
+        Install = 'pip3 install ' + ' '.join(PkgExt)
         print(Install)
 
         File = 'requires.txt'
@@ -116,9 +153,9 @@ class TProjFiles():
             f'# pip3 install -r {File}',
             ''
         ]
-        with open(aDir + '/' + File, 'w') as F:
+        with open(aDir + '/' + File, 'w', encoding = 'utf-8') as F:
             F.write('\n'.join(Head))
-            F.write('\n'.join(ExtPkg))
+            F.write('\n'.join(PkgExt))
             F.write('\n')
 
     def Release(self, aDir: str = 'Release'):
