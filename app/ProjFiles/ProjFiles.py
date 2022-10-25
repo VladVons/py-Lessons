@@ -1,28 +1,28 @@
-'''
-Author:      Vladimir Vons, Oster Inc.
-Created:     2022.03.30
-License:     GNU, see LICENSE for more details
-Description:
-
-Search project dependencies from a file or directory
-'''
+# Created: 2022.03.30
+# Author: Vladimir Vons, Oster Inc.
+# License: GNU, see LICENSE for more details
+#
+# Search project dependencies from a file or directory
 
 
 import os
+import sys
 import re
 import shutil
-#import site
 
 
 class TProjFiles():
     def __init__(self, aSrc: str = ''):
-        self.Filter = r'.*\.log|.*\.LOG'
-        self.Files = []
-        self.Lines = 0
+        self.Filter = r'.*\.log'
         self.PkgExt = set()
         self.PkgInt = set()
-        self.DirPy = os.path.dirname(os.__file__)
-        #self.DirExtPkg = site.getsitepackages()
+
+        self._Files = []
+        self._BuiltIn = [x for x in sys.builtin_module_names if not x.startswith('_')]
+        #self._DirExtPkg = site.getsitepackages()
+        self._DirPy = os.path.dirname(os.__file__)
+        self._Lines = 0
+
 
         if (aSrc):
             self.Dst = os.getcwd() + '/'
@@ -36,8 +36,8 @@ class TProjFiles():
             return bool(Find)
 
     def _FileAdd(self, aFile: str):
-        if (os.path.exists(aFile)) and (not aFile in self.Files) and (not self._Filter(aFile)):
-            self.Files.append(aFile)
+        if (os.path.exists(aFile)) and (not aFile in self._Files) and (not self._Filter(aFile)):
+            self._Files.append(aFile)
             self.FileLoad(aFile)
 
     def _Find(self, aFileP: str , aFilesA: list, aFilesB: list = []):
@@ -54,7 +54,7 @@ class TProjFiles():
             if (os.path.exists(File)):
                 return File
 
-    def _PkgGroup(self, aVal1: str, aVal2: str):
+    def _PkgGroup(self, aFile: str, aVal1: str, aVal2: str):
         Module = aVal2 if (not aVal1) else aVal1
         if (not Module) or (Module in self.PkgInt) or (Module in self.PkgExt):
             return
@@ -62,16 +62,17 @@ class TProjFiles():
         Module = Module.strip().split(' as ')[0]
 
         ModulePath = Module.replace('.', '/')
-        if (Module.startswith('.')) or (self._FileExists([ModulePath, ModulePath + '.py'])):
+        Files = [ModulePath, ModulePath + '.py']
+        if (Module.startswith('.')) or (self._FileExists(Files)):
             self.PkgInt.add(Module)
             return
 
-        if (not self._FileExists([self.DirPy + '/' + Module, self.DirPy + '/' + Module + '.py'])):
+        Files = [self._DirPy + '/' + Module, self._DirPy + '/' + Module + '.py']
+        if (not self._FileExists(Files)) and (not Module in self._BuiltIn):
             self.PkgExt.add(Module)
 
     def GetPkgExt(self) -> list:
         return sorted(set([x.split('.')[0] for x in self.PkgExt]))
-
 
     def FileLoad(self, aFile: str):
         if (not os.path.exists(aFile)):
@@ -89,7 +90,7 @@ class TProjFiles():
         Patt2 = r'from\s+(.*)\s+import\s+(.*)'
         #Patt3 = r'__import__\((.*)\)'
 
-        self.Lines += len(Lines)
+        self._Lines += len(Lines)
 
         InComment1 = False
         InComment2 = False
@@ -107,7 +108,7 @@ class TProjFiles():
 
             Find = re.findall(Patt1 + '|' + Patt2, Line)
             if (Find):
-                self._PkgGroup(*Find[0][:2])
+                self._PkgGroup(aFile, *Find[0][:2])
                 F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
                 if (F1):
                     self._Find(aFile, F1.split(','))
@@ -129,11 +130,11 @@ class TProjFiles():
                 for File in Files:
                     Path = Root + '/' + File
                     if (aAll):
-                        if (not Path in self.Files) and (not self._Filter(Path)):
+                        if (not Path in self._Files) and (not self._Filter(Path)):
                             if (Path.endswith('.py')):
                                 self.FileLoad(Path)
                             else:
-                                self.Files.append(Path)
+                                self._Files.append(Path)
                     else:
                         self.FileLoad(Path)
 
@@ -146,22 +147,24 @@ class TProjFiles():
         Install = 'pip3 install ' + ' '.join(PkgExt)
         print(Install)
 
+
         File = 'requires.txt'
         Head = [
             '# sudo apt install python3-pip python3-dev gcc libpq-dev libffi-dev --no-install-recommends',
             '# curl -sS https://bootstrap.pypa.io/get-pip.py | python3',
             f'# pip3 install -r {File}',
-            ''
         ]
         with open(aDir + '/' + File, 'w', encoding = 'utf-8') as F:
             F.write('\n'.join(Head))
+            F.write('\n')
+            F.write('\n')
             F.write('\n'.join(PkgExt))
             F.write('\n')
 
     def Release(self, aDir: str = 'Release'):
         SizeTotal = 0
         DirDst = self.Dst + aDir
-        for Idx, File in enumerate(sorted(self.Files)):
+        for Idx, File in enumerate(sorted(self._Files)):
             Dir = DirDst + '/' + os.path.dirname(File)
             os.makedirs(Dir, exist_ok=True)
             shutil.copy(File, self.Dst + aDir + '/' + File)
@@ -169,7 +172,7 @@ class TProjFiles():
             Size = os.path.getsize(File)
             SizeTotal += Size
             print('%2d, %4.1fk, %s' % (Idx + 1, Size / 1000, File))
-        print('Size %4.1fk, Lines: %s' % (SizeTotal / 1000, self.Lines))
+        print('Size %4.1fk, Lines: %s' % (SizeTotal / 1000, self._Lines))
 
         print()
         self.Requires(DirDst)
