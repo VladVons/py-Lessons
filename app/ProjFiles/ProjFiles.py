@@ -152,6 +152,8 @@ class TProjFiles():
         Head = [
             '# sudo apt install python3-pip python3-dev gcc libpq-dev libffi-dev --no-install-recommends',
             '# curl -sS https://bootstrap.pypa.io/get-pip.py | python3',
+	    '',
+	    f'# {Install}',
             f'# pip3 install -r {File}',
         ]
         with open(aDir + '/' + File, 'w', encoding = 'utf-8') as F:
