@@ -3,7 +3,7 @@ from ProjFiles import TProjFiles
 
 
 def Main1():
-    PF = TProjFiles('../src')
+    PF = TProjFiles('/home/vladvons/Projects/py/py-b2b/src')
     PF.FilesLoad(['b2b.py', 'Task/Price/Main.py'])
     PF.DirsLoad(['Conf'])
     PF.DirsLoad(['Task'], not True)
