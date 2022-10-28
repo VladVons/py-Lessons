@@ -6,6 +6,9 @@ import numpy
 
 # python3 setup.py build
 
+from mysum import *
+
+
 # find the shared library, the path depends on the platform and Python version
 libfile = glob.glob('build/*/mysum*.so')[0]
 

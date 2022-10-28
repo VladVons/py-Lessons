@@ -16,3 +16,5 @@ long long mysum(int aN, int* aArray) {
    }
    return Res;
 }
+
+
