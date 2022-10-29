@@ -6,8 +6,8 @@ cppyy.cppdef(
         public:
             MyClass(int i) : m_data(i) {}
             virtual ~MyClass() {}
-            virtual int add_int(int i) { 
-                return m_data + i; 
+            virtual int add_int(int i) {
+                return m_data + i;
             }
             int m_data;
     };
