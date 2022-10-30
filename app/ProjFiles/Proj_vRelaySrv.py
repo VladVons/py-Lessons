@@ -7,7 +7,7 @@ def Main():
     PF.FilesLoad(['vRelaySrv.py', 'Task/Scraper/__init__.py', 'Task/ScraperSrv/__init__.py'])
     PF.DirsLoad(['Conf'])
     PF.DirsLoad(['Task/WebSrv'], True)
-    PF.PkgExt.add('cffi')
+    PF.PkgExt.update(['cffi', 'lxml'])
     PF.Release('Proj_vRelaySrv')
 
 os.system('clear')
