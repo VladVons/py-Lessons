@@ -1,0 +1,104 @@
+{
+    "DirData": "./Data",
+    "Conf": [
+        "./Data/Conf", 
+        "./Data/In/Price.json"
+    ],
+    "Comment": "",
+    "Include": [
+        "Task~Price_Vendor.json"
+    ],
+    "Plugins": [
+        {"Name": "SendMail"},
+        {"Name": "Pack_zip", "Enable": false}, 
+        {"Name": "Out_OpenCart_json", "Enable": false}, 
+        {"Name": "Out_OpenCart3_sql", "Enable": false}, 
+        {"Name": "Out_OpenCart_xml", "Enable": false}, 
+        {"Name": "Out_PricesJoin_xlsx", "Enable": false}, 
+        {"Name": "Out_Save_txt", "Enable": false}
+    ],
+    "Common": {
+        "SleepLoop": 0.01,
+        "USD": 37.1,
+        "SaveCache": true
+    },
+    "Plugin": {
+        "MiscIdle": {
+            "Sleep": 1
+        },
+        "Out_Save_txt" : {
+            "Depends": [
+                "In_Price_kts_csv", 
+                "In_Price_kpi_xls", 
+                "In_Price_brain_net"
+            ],
+            "Dir": "./Data/Save"
+        },
+        "Out_OpenCart3_sql" : {
+            "Depends": ["Out_OpenCart_json"],
+            "FileIn": "./Data/Out/OpenCart.json"
+        },
+        "Out_OpenCart_json" : {
+            "Depends": [
+                "In_Price_brain_net", 
+                "PricesJoin"
+            ],
+            "-File": "./Data/OpenCart.json"
+        },
+        "Out_OpenCart_xml" : {
+            "Depends": [
+                "In_Price_brain_net", 
+                "PricesJoin"
+            ],
+            "-File": "./Data/OpenCart.xml"
+        },
+        "PricesJoin": {
+            "Main": "In_Price_brain_net",
+            "Depends": [
+                "In_Price_brain_net",
+                "In_Price_chip_xls", 
+                "In_Price_dclink_xlsx", 
+                "In_Price_erc_xlsx", 
+                "In_Price_kts_csv", 
+                "In_Price_tdb_xlsx",
+                "In_Price_kpi_xls"
+            ]
+        },
+        "Out_PricesJoin_xlsx": {
+            "Depends": ["PricesJoin"],
+            "-File": "./Data/PriceJoin.xlsx",
+            "Prices": true,
+            "Ratio": false,
+            "Format": "#,#0.0",
+            "Field": {
+                "Width": {
+                    "Id": 0,
+                    "CategoryId": 0,
+                    "Available": 0,
+                    "Mpn": 20,
+                    "Name": 60
+                }
+            }
+        },
+        "Pack_zip": {
+            "Depends": [
+                "-Out_PricesJoin_xlsx",
+                "Out_OpenCart_json", 
+                "Out_OpenCart3_sql", 
+                "Out_OpenCart_xml"
+            ],
+            "Files": [
+                "./Data/Out"
+            ],
+            "File": "./Data/PackAll.zip"
+        },
+        "SendMail": {
+            "Depends": ["Pack_zip"],
+            "From": "ua0976646510@gmail.com",
+            "To": ["vladvons@gmail.com"],
+            "Subject": "Price list generator",
+            "Body": "Hello,\nYou ordered a file\n",
+            "File": ["./Data/PackAll.zip"]
+        }
+    }
+}
