@@ -148,7 +148,7 @@ class TProjFiles():
         print(Install)
 
 
-        File = 'requires.txt'
+        File = 'requires.lst'
         Head = [
             '# sudo apt install python3-pip python3-dev gcc libpq-dev libffi-dev --no-install-recommends',
             '# curl -sS https://bootstrap.pypa.io/get-pip.py | python3',
