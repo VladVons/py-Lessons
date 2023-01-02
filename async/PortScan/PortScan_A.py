@@ -14,7 +14,8 @@ import random
 
 
 class TPortScan():
-    MaxConn = 1015
+    #MaxConn = 1015
+    MaxConn = 512
     TimeOut = 3
     _CntAll = 0
     _CntOpen = 0
@@ -56,6 +57,7 @@ class TPortScan():
         try:
             Reader, Writer = await asyncio.wait_for(Conn, timeout=self.TimeOut)
             self._CntOpen += 1
+            print(f'opened {aIp}:{aPort}')
             return True
         except:
             return False
@@ -115,8 +117,8 @@ def SpeedTest():
 
 def Scan():
     #Ports = [80]
-    Ports = list(range(1000, 65536))
-    Hosts = ['192.168.12.214']
+    Ports = list(range(0, 65535))
+    Hosts = ['195.140.244.47']
 
     PortScan = TPortScan()
     Task = PortScan.CheckRange(Hosts, Ports)
@@ -133,6 +135,8 @@ def ScanFromFile(aFile: str):
         for Host, Port, Opened in Res:
             print('%s:%s %s' % (Host, Port, Opened))
 
+StartAt = time.time()
 #SpeedTest()
 Scan()
 #ScanFromFile('proxies.txt')
+print('time sec: ', round(time.time() - StartAt, 2))
