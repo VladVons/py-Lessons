@@ -15,7 +15,7 @@ import random
 
 class TPortScan():
     #MaxConn = 1015
-    MaxConn = 512
+    MaxConn = 256
     TimeOut = 3
     _CntAll = 0
     _CntOpen = 0
@@ -118,7 +118,7 @@ def SpeedTest():
 def Scan():
     #Ports = [80]
     Ports = list(range(0, 65535))
-    Hosts = ['195.140.244.47']
+    Hosts = ['195.140.244.44']
 
     PortScan = TPortScan()
     Task = PortScan.CheckRange(Hosts, Ports)
