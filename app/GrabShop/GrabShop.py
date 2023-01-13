@@ -9,11 +9,13 @@ import time
 import logging
 import asyncio
 #
-from Lib.PluginFozzy import TFozzy
+from Lib.PluginFozzy import TPlugin_Fozzy
+
+__version__ = '1.01, 2023.01.12, vladvons@gmail.com'
 
 
 async def Run():
-    SiteMap = TFozzy()
+    SiteMap = TPlugin_Fozzy()
 
     File = 'Data.json'
     if (not SiteMap.LoadData(File)):
@@ -24,10 +26,11 @@ async def Run():
 
 def Main():
     StartT = time.time()
+
     AppName = os.path.basename(sys.argv[0])
-    print('%s, v1.01, 2023.01.12, vladvons@gmail.com' % (AppName))
+    print('Ver: %s, %s' % (AppName, __version__))
     print('Python:', sys.version)
-    print('Directory:', os.getcwd())
+    print('Dir:', os.getcwd())
 
     logging.basicConfig(
         level = logging.INFO,
@@ -40,6 +43,6 @@ def Main():
     )
 
     asyncio.run(Run())
-    logging.info('async duration (s) %s', round(time.time() - StartT, 2))
+    logging.info('Duration (s) %s', round(time.time() - StartT, 2))
 
 Main()

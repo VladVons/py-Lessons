@@ -16,14 +16,14 @@ class TSiteMap():
         self.Download = TDownload()
         self.Data = []
 
-    def LoadFile(self, aName: str) -> list:
+    def LoadFile(self, aName: str) -> str:
         logging.info('LoadFile(): %s', aName)
 
         Path = f'{self.Download.DirOut}/{aName}'
         with open(Path, 'r', encoding = 'utf8') as F:
             return F.read()
 
-    def _Parse(self, aData: dict):
+    def _DoParse(self, aData: dict):
         raise NotImplementedError()
 
     def Parse(self, aData: str):
@@ -38,7 +38,7 @@ class TSiteMap():
             except  Exception as _E:
                 continue
 
-            Data = self._Parse({'Path': Path, 'Title': Title, 'Image': Image})
+            Data = self._DoParse({'Path': Path, 'Title': Title, 'Image': Image})
             if (Data):
                 self.Data.append(Data)
 
@@ -48,9 +48,6 @@ class TSiteMap():
             if (Path.endswith('.xml')):
                 Data = self.LoadFile(File)
                 self.Parse(Data)
-
-    def _OnFetch(self, aPath: str) -> str:
-        return aPath
 
     def LoadData(self, aFile: str) -> bool:
         File = self.Download.DirOut + '/' + aFile
@@ -62,7 +59,7 @@ class TSiteMap():
     def SaveData(self, aFile: str):
         File = self.Download.DirOut + '/' + aFile
         with open(File, 'w', encoding = 'utf8') as F:
-            json.dump(self.Data, F, indent=2, sort_keys=True, ensure_ascii=False)
+            json.dump(self.Data, F, indent=2, sort_keys=True, ensure_ascii = False)
 
     async def SaveImages(self):
         Urls = [x['Image'] for x in self.Data]

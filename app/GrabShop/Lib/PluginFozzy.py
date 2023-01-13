@@ -9,16 +9,22 @@ import re
 from .SiteMap import TSiteMap
 
 
-class TFozzy(TSiteMap):
+class TPlugin_Fozzy(TSiteMap):
     def __init__(self):
         super().__init__()
-        self.Download.OnFetch = self._OnFetch
+
+        self.Download.OnFetchWrite = self._OnFetchWrite
         self.UrlToEan = {}
 
-    def _OnFetch(self, aPath: str) -> str:
-        return 'Image/' + self.UrlToEan.get(aPath) + '.jpg'
+    def _UrlToFile(self, aUrl: str) -> str:
+        return 'Image/' + self.UrlToEan.get(aUrl) + '.jpg'
 
-    def _Parse(self, aData):
+    def _OnFetchWrite(self, aUrl: str, aData: dict):
+        if (aData['status'] == 200):
+            File = self._UrlToFile(aUrl)
+            self.Download.WriteFile(File, aData['data'])
+
+    def _DoParse(self, aData: dict) -> dict:
         Ean = re.search(r'-(\d{8,13})\.html$', aData['Path'])
         if (Ean):
             aData['EAN'] = Ean.group(1)
@@ -29,7 +35,7 @@ class TFozzy(TSiteMap):
 
         Urls = []
         for x in self.Data:
-            File = self.Download.DirOut + '/' + self._OnFetch(x['Image'])
+            File = self.Download.DirOut + '/' + self._UrlToFile(x['Image'])
             if (not os.path.exists(File)):
                 Urls.append(x['Image'])
         await self.Download.GetUrls(Urls)
