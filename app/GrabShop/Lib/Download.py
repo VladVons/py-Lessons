@@ -26,7 +26,7 @@ class TDownload():
         with open(Path, 'wb') as F:
             F.write(aData)
 
-    async def Fetch(self, aUrl: str, aSession: aiohttp.ClientSession) -> tuple:
+    async def _Fetch(self, aUrl: str, aSession: aiohttp.ClientSession) -> tuple:
         try:
             async with aSession.get(aUrl) as Response:
                 Data = await Response.read()
@@ -34,13 +34,14 @@ class TDownload():
         except Exception as E:
             print('Fetch err:', E, aUrl)
 
-    async def FetchSem(self, aUrl: str, aSession: aiohttp.ClientSession, aSem: asyncio.Semaphore, aIdx: int) -> tuple:
+    async def _FetchSem(self, aUrl: str, aSession: aiohttp.ClientSession, aSem: asyncio.Semaphore, aIdx: int) -> tuple:
         async with aSem:
             print('FetchSem', aIdx, aUrl)
 
-            FetchData = await self.Fetch(aUrl, aSession)
+            FetchData = await self._Fetch(aUrl, aSession)
             if (FetchData):
                 if (self.OnFetchWrite):
+                    # pylint: disable-next=not-callable
                     self.OnFetchWrite(aUrl, FetchData)
                 elif (FetchData['status'] == 200):
                     Path = urlparse(aUrl)
@@ -53,14 +54,14 @@ class TDownload():
 
     async def GetUrl(self, aUrl: str) -> tuple:
         async with aiohttp.ClientSession() as Session:
-            return await self.Fetch(aUrl, Session)
+            return await self._Fetch(aUrl, Session)
 
     async def GetUrls(self, aUrl: list[str], aMaxConn: int = 5) -> list:
         Sem = asyncio.Semaphore(aMaxConn)
         async with aiohttp.ClientSession() as Session:
             print('Main. create tasks', len(aUrl))
             Tasks = [
-                asyncio.create_task(self.FetchSem(Val, Session, Sem, Idx))
+                asyncio.create_task(self._FetchSem(Val, Session, Sem, Idx))
                 for Idx, Val in enumerate(aUrl)
             ]
 
