@@ -19,7 +19,7 @@ class TPlugin_Fozzy(TSiteMap):
     def _UrlToFile(self, aUrl: str) -> str:
         return 'Image/' + self.UrlToEan.get(aUrl) + '.jpg'
 
-    def _OnFetchWrite(self, aUrl: str, aData: dict):
+    async def _OnFetchWrite(self, aUrl: str, aData: dict):
         if (aData['status'] == 200):
             File = self._UrlToFile(aUrl)
             self.Download.WriteFile(File, aData['data'])

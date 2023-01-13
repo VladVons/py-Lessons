@@ -34,6 +34,12 @@ class TDownload():
         except Exception as E:
             print('Fetch err:', E, aUrl)
 
+    async def _DoFetchWrite(self, aUrl: str, aData: dict):
+        if (FetchData['status'] == 200):
+            Path = urlparse(aUrl)
+            File = ('%s%s' % (Path.netloc, Path.path))
+            self.WriteFile(File, FetchData['data'])
+
     async def _FetchSem(self, aUrl: str, aSession: aiohttp.ClientSession, aSem: asyncio.Semaphore, aIdx: int) -> tuple:
         async with aSem:
             print('FetchSem', aIdx, aUrl)
@@ -42,11 +48,9 @@ class TDownload():
             if (FetchData):
                 if (self.OnFetchWrite):
                     # pylint: disable-next=not-callable
-                    self.OnFetchWrite(aUrl, FetchData)
-                elif (FetchData['status'] == 200):
-                    Path = urlparse(aUrl)
-                    File = ('%s%s' % (Path.netloc, Path.path))
-                    self.WriteFile(File, FetchData['data'])
+                    await self.OnFetchWrite(aUrl, FetchData)
+                else:
+                    await self._DoFetchWrite(aUrl, FetchData)
                 Res = (FetchData['status'], aUrl)
             else:
                 Res = (None, aUrl)
