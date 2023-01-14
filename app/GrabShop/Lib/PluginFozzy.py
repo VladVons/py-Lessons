@@ -32,10 +32,14 @@ class TPlugin_Fozzy(TSiteMap):
 
     async def SaveImages(self):
         self.UrlToEan = {x['Image']:x['EAN'] for x in self.Data}
+        UniqEan = []
 
         Urls = []
         for x in self.Data:
-            File = self.Download.DirOut + '/' + self._UrlToFile(x['Image'])
-            if (not os.path.exists(File)):
-                Urls.append(x['Image'])
+            if (not x['EAN'] in UniqEan):
+                UniqEan.append(x['EAN'])
+
+                File = self.Download.DirOut + '/' + self._UrlToFile(x['Image'])
+                if (not os.path.exists(File)):
+                    Urls.append(x['Image'])
         await self.Download.GetUrls(Urls)

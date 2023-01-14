@@ -23,6 +23,28 @@ class TSiteMap():
         with open(Path, 'r', encoding = 'utf8') as F:
             return F.read()
 
+    async def LoadSiteMap(self, aUrl: str) -> list:
+        Res = []
+
+        UrlDown = await self.Download.Get(aUrl)
+        Err = FilterKeyErr(UrlDown)
+        if (not Err):
+            Data = UrlDown['Data']
+            Status = UrlDown['Status']
+            if (Status == 200):
+                if (aUrl.endswith('.xml.gz')):
+                    Data = gzip.decompress(Data)
+
+                Urls = re.findall('<loc>(.*?)</loc>', Data)
+                for Url in Urls:
+                    if (Url.endswith('.xml')) or (Url.endswith('.xml.gz')):
+                        Res += await self.LoadSiteMap(Url)
+                    else:
+                        Res.append(Url.rstrip('/'))
+            else:
+                Log.Print(1, 'e', 'Sitemap error %s, %s' % (Status, self.UrlRoot))
+        return Res
+
     def _DoParse(self, aData: dict):
         raise NotImplementedError()
 
