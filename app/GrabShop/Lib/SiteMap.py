@@ -26,7 +26,7 @@ class TSiteMap():
     async def LoadSiteMap(self, aUrl: str) -> list:
         Res = []
 
-        UrlDown = await self.Download.Get(aUrl)
+        UrlDown = await self.Download.GetUrl(aUrl)
         Err = FilterKeyErr(UrlDown)
         if (not Err):
             Data = UrlDown['Data']
