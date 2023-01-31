@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 '''
 python async example
 VladVons@gmail.com
@@ -15,15 +13,7 @@ async def ProveA():
     Loops = 0
     while True:
         Loops += 1
-        print('ProveA 2s', Loops)
-        await asyncio.sleep(2)
-
-
-async def ProveB():
-    Loops = 0
-    while True:
-        Loops += 1
-        print('ProveB 3s', Loops)
+        print('ProveA 3s', Loops)
         await asyncio.sleep(3)
 
 
@@ -77,8 +67,7 @@ async def Main():
     Task1 = asyncio.create_task(THttpSrv().Run(8080))
     Task2 = asyncio.create_task(THttpSrv().Run(8081))
     Task3 = asyncio.create_task(ProveA())
-    Task4 = asyncio.create_task(ProveB())
-    await asyncio.gather(Task1, Task2, Task3, Task4)
+    await asyncio.gather(Task1, Task2, Task3)
 
 
 asyncio.run(Main())
