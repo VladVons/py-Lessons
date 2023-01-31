@@ -46,7 +46,7 @@ class TDownload():
                 Res = (None, aUrl)
             return Res
 
-    async def Get(self, aUrl: list, aMaxConn: int = 5):
+    async def Get(self, aUrl: list[str], aMaxConn: int = 5):
         Sem = asyncio.Semaphore(aMaxConn)
         async with aiohttp.ClientSession() as Session:
             print('Main. create tasks', len(aUrl))
