@@ -7,6 +7,7 @@ import os
 import re
 #
 from .SiteMap import TSiteMap
+from .Ean import TEan
 
 
 class TPlugin_Fozzy(TSiteMap):
@@ -43,3 +44,7 @@ class TPlugin_Fozzy(TSiteMap):
                 if (not os.path.exists(File)):
                     Urls.append(x['Image'])
         await self.Download.GetUrls(Urls)
+
+    def CheckEan(self, aValid: bool = True) -> list:
+        Ean = TEan()
+        return [x for x in self.Data if Ean.Init(x.get('EAN', '')).Check() == aValid]

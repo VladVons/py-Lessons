@@ -21,6 +21,7 @@ async def Run():
     if (not SiteMap.LoadData(File)):
         SiteMap.ParseDir()
         SiteMap.SaveData(File)
+    #SiteMap.Data = SiteMap.CheckEan(True)
     await SiteMap.SaveImages()
     await asyncio.sleep(1)
 
