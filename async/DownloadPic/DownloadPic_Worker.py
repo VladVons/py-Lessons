@@ -17,36 +17,34 @@ class TDownload():
         self.Dir = Dir.split('.')[0]
         os.makedirs(self.Dir, exist_ok = True)
 
-        self.Queue = asyncio.Queue()
+        self.Cnt = 0
+        self.Url = ''
 
     def WriteFile(self, aName: str, aData: bytes):
         Path = self.Dir + '/' + aName
         with open(Path, 'wb') as F:
             F.write(aData)
 
-    async def Fetch(self, aUrl: str, aSession, aCnt: int):
-        async with aSession.get(aUrl) as Response:
+    async def Fetch(self, aSession):
+        async with aSession.get(self.Url) as Response:
             try:
                 Data = await Response.read()
-                self.WriteFile('File_A_%03d.jpeg' % aCnt, Data)
+                self.WriteFile('File_A_%03d.jpeg' % self.Cnt, Data)
             except Exception as E:
                 print('Err', E)
 
     async def _Worker(self, aIdx: int):
-        #print(f'Starting worker {aIdx}')
+        print(f'Starting worker {aIdx}')
         async with aiohttp.ClientSession() as Session:
-            while (not self.Queue.empty()):
-                Size = self.Queue.qsize()
-                if (Size % 10 == 0):
-                    print(f'remains {Size}')
-
-                UrlQ = await self.Queue.get()
-                await self.Fetch(UrlQ, Session, Size)
+            while (self.Cnt >= 0):
+                self.Cnt =- 1
+                if (self.Cnt % 10 == 0):
+                    print(f'remains {self.Cnt}')
+                await self.Fetch(Session)
 
     async def Main(self, aUrl: str, aCnt: int, aMaxConn: int):
-        for i in range(aCnt):
-            self.Queue.put_nowait(aUrl)
-
+        self.Cnt = aCnt
+        self.Url = aUrl
         Tasks = [asyncio.create_task(self._Worker(i + 1)) for i in range(aMaxConn)]
         await asyncio.gather(*Tasks)
 
