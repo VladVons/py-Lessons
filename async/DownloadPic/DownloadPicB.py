@@ -23,17 +23,17 @@ class TDownload():
         with open(Path, 'wb') as F:
             F.write(aData)
 
-        self.Cnt -= 1
-        if (self.Cnt % 10 == 0):
-            print('remains', self.Cnt)
-
-    async def Fetch(self, aUrl: str, aSession, aCnt):
+    async def Fetch(self, aUrl: str, aSession, aIdx: int):
         async with aSession.get(aUrl) as Response:
             try:
                 Data = await Response.read()
-                self.WriteFile('File_A_%03d.jpeg' % aCnt, Data)
+                #self.WriteFile('File_A_%03d.jpeg' % aIdx, Data)
             except Exception as E:
                 print('Err', E)
+            else:
+                self.Cnt -= 1
+                if (self.Cnt % 10 == 0):
+                    print('remains', self.Cnt)
 
     async def FetchSem(self, aUrl: str, aSession, aSem, aIdx: int):
         async with aSem:
@@ -53,6 +53,9 @@ class TDownload():
 
 
 StartT = time.time()
-Task = TDownload().Main('https://loremflickr.com/800/600/girl', 100, 5)
+#Url = 'https://loremflickr.com/800/600/girl'
+#Url = 'http://localhost/phpHello.php'
+Url = 'http://localhost:8080'
+Task = TDownload().Main(Url, 10000, 1000)
 asyncio.run(Task)
 print('async duration (s) %0.2f' % (time.time() - StartT))
