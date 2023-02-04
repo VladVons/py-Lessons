@@ -50,16 +50,16 @@ def SpeedAll(aArr, aFind, aCount):
         SpeedFunc(Method, aArr, aFind, aCount)
 
 #---
-def _TimerDecor(aFunc):
-    def Wrapper(aArr, aFind):
+def DTimer(aFunc):
+    def Decor(aArr, aFind):
         Start = time.time()
         Count = 1 * 1000000
         for a in range(Count):
             Res = aFunc(aArr, aFind)
         print('Method: %s, Time: %0.2f, Found: %s' % (aFunc.__name__, time.time() - Start, Res))
-    return Wrapper
+    return Decor
 
-@_TimerDecor
+@DTimer
 def Test_04_Decor(aArr, aFind):
     Test_03(aArr, aFind)
 

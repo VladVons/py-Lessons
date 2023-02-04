@@ -7,11 +7,11 @@ VladVons@gmail.com
 '''
 
 
-from Lib import Decor_AddModules
+from Lib import DAddModules
 import Main_Extender
 
 
-@Decor_AddModules([Main_Extender])
+@DAddModules([Main_Extender])
 class TMain():
     def __init__(self):
         self.Greet = 'Hello'

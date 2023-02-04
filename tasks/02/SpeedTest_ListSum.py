@@ -8,28 +8,28 @@ VladVons@gmail.com
 import time
 
 
-def Decor_SpeedTest(aFunc):
-    def Wraper(aData):
+def DSpeedTest(aFunc):
+    def Decor(aData):
         StartAt = time.time()
         Loops = 10_000
         for _i in range(Loops):
             aFunc(aData)
         print('%s, %.3fs' % (aFunc.__name__, time.time() - StartAt))
-    return Wraper
+    return Decor
 
-@Decor_SpeedTest
+@DSpeedTest
 def Sum_01(aData: str):
     return sum(int(aData[x]) for x in range(1, len(aData) -1, 2))
 
-@Decor_SpeedTest
+@DSpeedTest
 def Sum_02(aData: str):
     return sum(int(x) for x in aData[0::2])
 
-@Decor_SpeedTest
+@DSpeedTest
 def Sum_03(aData: str):
     return sum([int(x) for x in aData[0::2]])
 
-@Decor_SpeedTest
+@DSpeedTest
 def Sum_04(aData: str):
     return sum(map(int, aData[0::2]))
 
