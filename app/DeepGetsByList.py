@@ -8,7 +8,7 @@ def DeepGetsByList(aObj, aKeys: list, aWithPath: bool = True) -> list:
             Type = type(aObj)
             if (Type == dict):
                 Val = aObj.get(aKeys[0])
-                if (not Val is None):
+                if (Val is not None):
                     Res += Recurs(Val, aKeys[1:], f'{aPath}.{aKeys[0]}')
             elif (Type in [list, tuple, set]):
                 for Idx, Val in enumerate(aObj):

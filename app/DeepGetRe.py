@@ -18,7 +18,7 @@ def DeepGetRe(aObj, aKeys: list, aWithPath: bool = True) -> list:
                             Res += Recurs(aObj.get(xKey), aKeys[1:], f'{aPath}.{xKey}')
                 else:
                     Val = aObj.get(Key)
-                    if (not Val is None):
+                    if (Val is not None):
                         Res += Recurs(Val, aKeys[1:], f'{aPath}.{Key}')
             elif (Type in [list, tuple, set]):
                 for Idx, Val in enumerate(aObj):

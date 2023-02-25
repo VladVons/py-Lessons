@@ -22,5 +22,4 @@ def Main_A(aFile: str):
     print('Words', WordsCnt)
 
 
-Main_A('Noviy_zavet.txt')
-#Main_A('Noviy_zavet_matv.txt')
+Main_A('Noviy_zavet_matv.txt')

@@ -27,7 +27,7 @@ Words = TWords()
 Words.Show()
 
 print()
-File = 'WordCountRe.py'
+File = 'Noviy_zavet_matv.txt'
 Words.LoadFile(File)
 Words.Show()
 

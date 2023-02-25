@@ -31,6 +31,7 @@ class TWords():
 
 
 Words = TWords()
-File = __file__
+#File = __file__
+File = 'Noviy_zavet_matv.txt'
 Words.LoadFile(File)
-Words.Top(5, True)
+Words.Top(20, True)
