@@ -10,6 +10,7 @@ import sys
 import re
 import shutil
 
+
 def GetLines(aFile: str) -> tuple:
     try:
         with open(aFile, 'r', encoding = 'utf8') as F:
