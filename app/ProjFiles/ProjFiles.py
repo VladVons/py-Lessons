@@ -10,19 +10,50 @@ import sys
 import re
 import shutil
 
+def GetLines(aFile: str) -> tuple:
+    try:
+        with open(aFile, 'r', encoding = 'utf8') as F:
+            Lines = F.readlines()
+            Size = F.tell()
+    except UnicodeDecodeError:
+        #print('Not a text file', aFile)
+        Lines = []
+        Size = os.path.getsize(aFile)
+    return (Size, Lines)
+
+
+class TFiles(list):
+    Skip = r'.*\.log'
+
+    def Filter(self, aFile: str) -> bool:
+        if (self.Skip):
+            Find = re.findall(self.Skip, aFile)
+            return bool(Find)
+
+    def Add(self, aFile: str):
+        if (os.path.exists(aFile)) and (aFile not in self) and (not self.Filter(aFile)):
+            self.append(aFile)
+            return True
+
+    def GetExtInf(self):
+        Res = {}
+        for xFile in self:
+            Ext = xFile.rsplit('.', maxsplit = 1)[-1]
+            if (Ext not in Res):
+                Res[Ext] = []
+            Size, Lines = GetLines(xFile)
+            Res[Ext].append((Size, len(Lines)))
+        return Res
 
 class TProjFiles():
     def __init__(self, aSrc: str = ''):
-        self.Filter = r'.*\.log'
         self.PkgExt = set()
         self.PkgInt = set()
 
-        self._Files = []
         self._BuiltIn = [x for x in sys.builtin_module_names if not x.startswith('_')]
         #self._DirExtPkg = site.getsitepackages()
         self._DirPy = os.path.dirname(os.__file__)
-        self._Lines = 0
-
+        self.Files = TFiles()
 
         if (aSrc):
             self.Dst = os.getcwd() + '/'
@@ -30,17 +61,14 @@ class TProjFiles():
         else:
             self.Dst = './'
 
-    def _Filter(self, aFile: str) -> bool:
-        if (self.Filter):
-            Find = re.findall(self.Filter, aFile)
-            return bool(Find)
-
     def _FileAdd(self, aFile: str):
-        if (os.path.exists(aFile)) and (not aFile in self._Files) and (not self._Filter(aFile)):
-            self._Files.append(aFile)
+        if (self.Files.Add(aFile)):
             self.FileLoad(aFile)
 
-    def _Find(self, aFileP: str , aFilesA: list, aFilesB: list = []):
+    def _Find(self, aFileP: str , aFilesA: list, aFilesB: list = None):
+        if (aFilesB is None):
+            aFilesB = []
+
         for FileA in aFilesA:
             FileA = FileA.strip()
 
@@ -79,18 +107,15 @@ class TProjFiles():
             print('File not found', aFile)
             return
 
-        try:
-            with open(aFile, 'r') as F:
-                Lines = F.readlines()
-        except UnicodeDecodeError:
-            #print('Not a text file', aFile)
+        _Size, Lines = GetLines(aFile)
+        if (not Lines):
             return
 
         Patt1 = r'import\s+(.*)'
         Patt2 = r'from\s+(.*)\s+import\s+(.*)'
         #Patt3 = r'__import__\((.*)\)'
 
-        self._Lines += len(Lines)
+        self.Files.Add(aFile)
 
         InComment1 = False
         InComment2 = False
@@ -130,14 +155,13 @@ class TProjFiles():
                 for File in Files:
                     Path = Root + '/' + File
                     if (aAll):
-                        if (not Path in self._Files) and (not self._Filter(Path)):
+                        if (Path not in self.Files) and (not self.Files.Filter(Path)):
                             if (Path.endswith('.py')):
                                 self.FileLoad(Path)
                             else:
-                                self._Files.append(Path)
+                                self.Files.Add(Path)
                     else:
                         self.FileLoad(Path)
-
                 if (aAll):
                     self.DirsLoad(Dirs, aAll)
 
@@ -164,17 +188,32 @@ class TProjFiles():
             F.write('\n')
 
     def Release(self, aDir: str = 'Release'):
-        SizeTotal = 0
-        DirDst = self.Dst + aDir
-        for Idx, File in enumerate(sorted(self._Files)):
-            Dir = DirDst + '/' + os.path.dirname(File)
-            os.makedirs(Dir, exist_ok=True)
-            shutil.copy(File, self.Dst + aDir + '/' + File)
+        def Copy():
+            DirDst = self.Dst + aDir
+            for Idx, File in enumerate(sorted(self.Files)):
+                Dir = DirDst + '/' + os.path.dirname(File)
+                os.makedirs(Dir, exist_ok=True)
+                shutil.copy(File, self.Dst + aDir + '/' + File)
 
-            Size = os.path.getsize(File)
-            SizeTotal += Size
-            print('%2d, %4.1fk, %s' % (Idx + 1, Size / 1000, File))
-        print('Size %4.1fk, Lines: %s' % (SizeTotal / 1000, self._Lines))
+                #Size = os.path.getsize(File)
+                #print('%2d, %4.1fk, %s' % (Idx + 1, Size / 1000, File))
+            print()
+            self.Requires(DirDst)
 
+        def Info():
+            FilesAll = SizeAll = LinesAll = 0
+            for Key, Val in sorted(self.Files.GetExtInf().items()):
+                Files = len(Val)
+                Size, Lines = list(map(sum, zip(*Val)))
+
+                FilesAll += Files
+                SizeAll += Size
+                LinesAll += Lines
+
+                print(f'{Key:4}: {Files:3}, size: {Size / 1000 :7.2f}k, lines: {Lines}')
+            print()
+            print(f'file: {FilesAll:3}, size: {SizeAll / 1000 :7.2f}k, lines: {LinesAll}')
+
+        Copy()
         print()
-        self.Requires(DirDst)
+        Info()
