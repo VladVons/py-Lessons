@@ -202,6 +202,7 @@ class TProjFiles():
             self.Requires(DirDst)
 
         def Info():
+            print(f'Project: {aDir}')
             FilesAll = SizeAll = LinesAll = 0
             for Key, Val in sorted(self.Files.GetExtInf().items()):
                 Files = len(Val)
