@@ -4,73 +4,98 @@
 
 
 import os
+import re
 
 
-def GetFileInfo(aFile: str) -> tuple:
-    try:
-        with open(aFile, 'r', encoding = 'utf8') as F:
-            Lines = len(F.readlines())
-            Size = F.tell()
-    except UnicodeDecodeError:
-        Lines = 0
-        Size = os.path.getsize(aFile)
+class TDirInfo():
+    def __init__(self, aDir: str):
+        self. Dir = aDir
+        self.Incl = None
+        self.Excl = None
+        #self.Excl = r'.*\.(tmp|temp)$'
 
-    Ext = aFile.rsplit('.', maxsplit = 1)[-1]
-    if ('/' in Ext) or (len(Ext) > 4):
-        #Ext = aFile.rsplit('/', maxsplit = 1)[-1]
-        Ext = '___'
-    return (Ext, Size, Lines)
+    def _Filter(self, aPath) -> bool:
+        if (self.Excl) and (re.findall(self.Excl, aPath)):
+            return False
 
-def GetFiles(aPath: str, aDepth: int = 0):
-    for File in sorted(os.listdir(aPath)):
-        Path = aPath + '/' + File
-        IsDir = os.path.isdir(Path)
-        if (IsDir):
-            yield from GetFiles(Path, aDepth + 1)
-        yield (Path, IsDir, aDepth)
+        if (self.Incl) and (not re.findall(self.Incl, aPath)):
+            return False
 
-def GetInfo(aDir: str) -> tuple:
-    Res = {}
-    MaxDepth = 0
-    for Path, IsDir, Depth in GetFiles(Dir):
-        if (IsDir):
-            Ext = 'DIR'
-            Size = Lines = 0
-        else:
-            Ext, Size, Lines = GetFileInfo(Path)
+        return True
 
-        if (Ext not in Res):
-            Res[Ext] = []
-        Res[Ext].append((Size, Lines))
+    @staticmethod
+    def GetFileInfo(aFile: str) -> tuple:
+        Lines = Size = 0
+        try:
+            with open(aFile, 'r', encoding = 'utf8') as F:
+                Lines = len(F.readlines())
+                Size = F.tell()
+        except (PermissionError, FileNotFoundError):
+            print(f'Errpr opening {aFile}')
+        except (UnicodeDecodeError):
+            Size = os.path.getsize(aFile)
 
-        if (Depth > MaxDepth):
-            MaxDepth = Depth
-    return (Res, MaxDepth)
+        Ext = aFile.rsplit('.', maxsplit = 1)[-1]
+        if ('/' in Ext) or (len(Ext) > 4):
+            #Ext = aFile.rsplit('/', maxsplit = 1)[-1]
+            Ext = '___'
+        return (Ext, Size, Lines)
 
-def ShowInfo(aDir: str) -> dict:
-    print('Directory statistics parsing', aDir)
-    print('parsing', aDir)
-    Data, MaxDepth = GetInfo(aDir)
+    def GetFiles(self) -> iter:
+        def Recurs(aPath: str, aDepth: int):
+            for File in sorted(os.listdir(aPath)):
+                Path = aPath + '/' + File
+                IsDir = os.path.isdir(Path)
+                if (IsDir):
+                    yield from Recurs(Path, aDepth + 1)
 
-    print()
-    print('Ext   Count      Size      Lines')
-    print('--------------------------------')
-    FilesAll = SizeAll = LinesAll = 0
-    for Key, Val in sorted(Data.items()):
-        Files = len(Val)
-        Size, Lines = list(map(sum, zip(*Val)))
+                if (self._Filter(File)):
+                    yield (Path, IsDir, aDepth)
+        yield from Recurs(self.Dir, 0)
 
-        FilesAll += Files
-        SizeAll += Size
-        LinesAll += Lines
+    def Get(self) -> tuple:
+        Res = {}
+        MaxDepth = 0
+        for Path, IsDir, Depth in self.GetFiles():
+            if (IsDir):
+                Ext = 'DIR'
+                Size = Lines = 0
+            else:
+                Ext, Size, Lines = self.GetFileInfo(Path)
 
-        print(f'{Key:5} {Files:5} {Size / 1000 :8.1f}k {Lines: 10}')
+            if (Ext not in Res):
+                Res[Ext] = []
+            Res[Ext].append((Size, Lines))
 
-    print()
-    print(f'Total {FilesAll:5} {SizeAll / 1000 :8.1f}k {LinesAll: 10}')
-    print(f'Depth {MaxDepth:5}')
+            if (Depth > MaxDepth):
+                MaxDepth = Depth
+        return (Res, MaxDepth)
+
+    def Show(self) -> dict:
+        print('Parsing', self.Dir)
+        Data, MaxDepth = self.Get()
+
+        print()
+        print('Ext   Count      Size      Lines')
+        print('--------------------------------')
+        FilesAll = SizeAll = LinesAll = 0
+        for Key, Val in sorted(Data.items()):
+            Files = len(Val)
+            Size, Lines = list(map(sum, zip(*Val)))
+
+            FilesAll += Files
+            SizeAll += Size
+            LinesAll += Lines
+
+            print(f'{Key:5} {Files:5} {Size / 1000 :8.1f}k {Lines: 10}')
+
+        print()
+        print(f'Total {FilesAll:5} {SizeAll / 1000 :8.1f}k {LinesAll: 10}')
+        print(f'Depth {MaxDepth:5}')
 
 
 #Dir = '/var/www/enabled/3w_shop4.oster.com.ua'
 Dir = '/home/vladvons/Projects/py/py-vShops/src'
-ShowInfo(Dir)
+DirInfo = TDirInfo(Dir)
+#DirInfo.Excl = r'.*\.(tmp|dat|xml|xlsx|jpg|png|gif|ico)$'
+DirInfo.Show()
