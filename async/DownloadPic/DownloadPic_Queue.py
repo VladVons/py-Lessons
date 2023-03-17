@@ -51,10 +51,12 @@ class TDownload():
         await asyncio.gather(*Tasks)
 
 StartT = time.time()
-Url = 'https://loremflickr.com/800/600/girl'
+Url = 'http://shop3.oster.com.ua:8080/api/misc/exit'
+Url = 'http://localhost:8080/api/misc/exit'
+#Url = 'https://loremflickr.com/800/600/girl'
 #Url = 'http://localhost/phpHello.php'
 #Url = 'http://localhost:8080'
-Task = TDownload().Main(Url, 100, 5)
+Task = TDownload().Main(Url, 100000, 100)
 asyncio.run(Task)
 print('async duration (s) %0.2f' % (time.time() - StartT))
 
