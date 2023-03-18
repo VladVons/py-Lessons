@@ -41,7 +41,7 @@ class TDirInfo():
             Ext = '___'
         return (Ext, Size, Lines)
 
-    def GetFiles(self) -> iter:
+    def Walk(self) -> iter:
         def Recurs(aPath: str, aDepth: int):
             for File in sorted(os.listdir(aPath)):
                 Path = aPath + '/' + File
@@ -56,7 +56,7 @@ class TDirInfo():
     def Get(self) -> tuple:
         Res = {}
         MaxDepth = 0
-        for Path, IsDir, Depth in self.GetFiles():
+        for Path, IsDir, Depth in self.Walk():
             if (IsDir):
                 Ext = 'DIR'
                 Size = Lines = 0
@@ -76,26 +76,28 @@ class TDirInfo():
         Data, MaxDepth = self.Get()
 
         print()
-        print('Ext   Count      Size      Lines')
-        print('--------------------------------')
+        print(' No Ext   Count      Size   SizeMax      Lines   LinesMax')
+        print('---------------------------------------------------------')
         FilesAll = SizeAll = LinesAll = 0
-        for Key, Val in sorted(Data.items()):
+        for Idx, (Key, Val) in enumerate(sorted(Data.items())):
             Files = len(Val)
+
             Size, Lines = list(map(sum, zip(*Val)))
+            SizeMax, LinesMax = list(map(max, zip(*Val)))
 
             FilesAll += Files
             SizeAll += Size
             LinesAll += Lines
 
-            print(f'{Key:5} {Files:5} {Size / 1000 :8.1f}k {Lines: 10}')
+            print(f'{Idx: 3} {Key:5} {Files:5} {Size / 1000 :8.1f}k {SizeMax / 1000 :8.1f}k {Lines: 10} {LinesMax: 10}')
 
         print()
-        print(f'Total {FilesAll:5} {SizeAll / 1000 :8.1f}k {LinesAll: 10}')
-        print(f'Depth {MaxDepth:5}')
+        print(f'          {FilesAll:5} {SizeAll / 1000 :8.1f}k           {LinesAll: 10}')
+        print(f'Depth     {MaxDepth:5}')
 
 
-#Dir = '/var/www/enabled/3w_shop4.oster.com.ua'
-Dir = '/home/vladvons/Projects/py/py-vShops/src'
+Dir = '/var/www/opencart-4'
+#Dir = '/home/vladvons/Projects/py/py-vShops/src'
 DirInfo = TDirInfo(Dir)
 #DirInfo.Excl = r'.*\.(tmp|dat|xml|xlsx|jpg|png|gif|ico)$'
 DirInfo.Show()
