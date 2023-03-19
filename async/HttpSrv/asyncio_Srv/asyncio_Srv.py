@@ -1,7 +1,7 @@
 '''
-python async example
+python async http server example
 VladVons@gmail.com
-2021.03.01
+2023.03.19
 '''
 
 import os
@@ -13,13 +13,14 @@ from asyncio import StreamReader, StreamWriter
 
 
 async def ProveA():
-    Sleep = 5
+    Sleep = 10
 
     Loops = 0
     while True:
         Loops += 1
         print(f'{Loops} async prove every {Sleep} sec')
         await asyncio.sleep(Sleep)
+
 
 class THeader():
     @staticmethod
@@ -60,7 +61,7 @@ class THeader():
 
 class THttpSrv():
     def __init__(self):
-        self.Loops = 0
+        self.Requests = 0
         self.DefPage = 'index.html'
 
     @staticmethod
@@ -88,21 +89,41 @@ class THttpSrv():
             Data = F.read()
         return (Data, Ext)
 
+    def Format(self, aData: str, aReplace: dict) -> str:
+        Keys = re.findall(r'\{(\w+?)\}', aData)
+        if (Keys):
+            KeyMissed = {Key: f'-= {Key} =-'for Key in Keys if not Key in aReplace}
+            InfoOut = aReplace.copy()
+            InfoOut.update(KeyMissed)
+            KeyPresent = {Key: InfoOut[Key] for Key in Keys}
+            aData = aData.format(**KeyPresent)
+        return aData
+
     async def CallBack(self, aReader: StreamReader, aWriter: StreamWriter):
-        self.Loops += 1
+        self.Requests += 1
 
         Head = await self.ReadHead(aReader)
         Path = Head.get('path').lstrip('/')
         if (not Path):
             Path = self.DefPage
 
+        Host, Port = aWriter.get_extra_info('peername')
+        Info = {
+            'requests': self.Requests,
+            'time':  datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'host': Head["host"],
+            'remote_host': Host,
+            'remote_port': Port,
+            'url': Head["url"],
+            'mode': Head["mode"]
+        }
+        print(Info)
+
         Header = THeader()
         if (os.path.exists(Path)):
             Data, Ext = self.ReadFile(Path)
             if (Ext == 'html'):
-                Keys = re.findall(r'\{(\w+?)\}', Data)
-                if (Keys):
-                    Data = Data.format(Title = f'Loops: {self.Loops}', Time = datetime.now())
+                Data = self.Format(Data, Info)
                 Head = Header.GetHead(200, Ext, len(Data))
             elif (Ext == 'php'):
                 Cmd = 'php'
