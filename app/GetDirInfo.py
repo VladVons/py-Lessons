@@ -96,8 +96,9 @@ class TDirInfo():
         print(f'Depth     {MaxDepth:5}')
 
 
-Dir = '/var/www/opencart-4'
+#Dir = '/var/www/opencart-4'
 #Dir = '/home/vladvons/Projects/py/py-vShops/src'
+Dir = '/home/vladvons/VirtEnv/python3.10/lib/python3.10/site-packages/aiohttp'
 DirInfo = TDirInfo(Dir)
 #DirInfo.Excl = r'.*\.(tmp|dat|xml|xlsx|jpg|png|gif|ico)$'
 DirInfo.Show()
