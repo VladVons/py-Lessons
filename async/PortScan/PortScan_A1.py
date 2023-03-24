@@ -5,6 +5,7 @@ python async example
 VladVons@gmail.com
 2021.04.09
 https://steemit.com/python/@gunhanoral/python-asyncio-port-scanner
+https://superfastpython.com/asyncio-port-scanner
 '''
 
 
