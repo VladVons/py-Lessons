@@ -6,7 +6,7 @@ def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vShops/src')
     PF.FilesLoad(['vShops.py', 'Task/SrvView/__init__.py'])
     PF.DirsLoad(['Conf/Default'])
-    PF.DirsLoad(['IncP/view'], True)
+    PF.DirsLoad(['MVC/catalog/view', '/MVC/catalog/lang/ua'], True)
     PF.Release('Proj_vShops_View')
 
 #os.system('clear')

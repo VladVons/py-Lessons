@@ -166,7 +166,6 @@ class TProjFiles():
                 if (aAll):
                     self.DirsLoad(Dirs, aAll)
 
-
     def Requires(self, aDir: str):
         PkgExt = self.GetPkgExt()
         Install = 'pip3 install ' + ' '.join(PkgExt)
@@ -203,8 +202,12 @@ class TProjFiles():
 
         def Info():
             print(f'Project: {aDir}')
+            print()
+            print(' No Ext Count     Size  Lines')
+            print('------------------------------')
+ 
             FilesAll = SizeAll = LinesAll = 0
-            for Key, Val in sorted(self.Files.GetExtInf().items()):
+            for Idx, (Key, Val) in enumerate(sorted(self.Files.GetExtInf().items())):
                 Files = len(Val)
                 Size, Lines = list(map(sum, zip(*Val)))
 
@@ -212,9 +215,9 @@ class TProjFiles():
                 SizeAll += Size
                 LinesAll += Lines
 
-                print(f'{Key:4}: {Files:3}, size: {Size / 1000 :7.2f}k, lines: {Lines}')
+                print(f'{Idx + 1: 3} {Key:5} {Files:3} {Size / 1000 :7.2f}k {Lines: 6}')
             print()
-            print(f'file: {FilesAll:3}, size: {SizeAll / 1000 :7.2f}k, lines: {LinesAll}')
+            print(f'          {FilesAll:3} {SizeAll / 1000 :7.2f}k   {LinesAll}')
 
         Copy()
         print()
