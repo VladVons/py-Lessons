@@ -1,0 +1,15 @@
+{
+    "api_conf": {
+        "dir_module": "MVC/catalog/view/route",
+        "cache": {
+            "path": "Data/cache/view",
+            "max_age": 0,
+            "excl_module": []
+        },
+        "loader": {
+            "ctrl": {
+                "path": "fs:Task.SrvCtrl.Api:ApiCtrl"
+            }
+        }
+    }
+}
