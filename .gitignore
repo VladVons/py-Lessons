@@ -8,6 +8,7 @@
 *.xlsx
 *.ods
 *.xml
+*.txt
 *.jpg
 __pycache__
 .idea
