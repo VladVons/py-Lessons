@@ -20,7 +20,8 @@ class TLog():
         return True
 
     def Print(self, aData: list, aDelim: str = '\t'):
-        print(aDelim.join([str(x) for x in aData]))
+        Arr = [str(x) for x in aData]
+        print(aDelim.join(Arr))
 
     def DiffDate(self, aLine: str):
         Words = aLine.split(';')
