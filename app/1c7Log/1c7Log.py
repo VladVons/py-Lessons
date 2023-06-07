@@ -39,6 +39,7 @@ class TLog():
         with open(aFile, 'r', encoding="cp1251") as hFile:
             print('\n---', aFile)
             self.Print(['Дні', 'Дата системи', 'Дата док', 'Номер документу і тип', 'Автор'])
+
             for Line in hFile.readlines():
                 if ('DocWriteNew;' in Line):
                     if (self.FilterOr(Line, ['Спис. ТМЦ', 'Прих. накл', 'Расх. накл', 'Розн. накл', 'Расх. касс. ордер'])):
