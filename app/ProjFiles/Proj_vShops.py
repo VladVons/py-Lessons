@@ -12,7 +12,7 @@ def Main():
         'Task/Price/__init__.py',
         'Task/Queue/__init__.py'
     ])
-    PF.DirsLoad(['Conf/Default'])
+    PF.DirsLoad(['Conf/Default', 'Task/Price'])
     #PF.DirsLoad(['MVC/View', 'MVC/Ctrl', 'MVC/Model', 'MVC/Lang'], True)
     PF.DirsLoad(['MVC'], True)
     PF.Release('Proj_vShops')

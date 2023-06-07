@@ -6,6 +6,9 @@
 # Code13 = '4820192681810'
 # Ean13 = TEan13(Code13)
 # print(Code13, Ean13.Check())
+# Ean = TEan()
+# print(Code8, Ean.Init(Code8).Check())
+# print(Code13, Ean.Init(Code13).Check())
 
 
 class TEan():
@@ -21,11 +24,10 @@ class TEan():
         return '%s%s' % (self.Code[:-1], self.GetCrc())
 
     def GetCrc(self) -> int:
-        Code = self.Code[:-1]
-        Even = sum([int(x) for x in Code[0::2]])
-        Odd = sum([int(x) for x in Code[1::2]])
-        Crc = (10 - ((Even + Odd * 3) % 10)) % 10
-        return Crc
+        Body = self.Code[:-1]
+        #Data = [(3 if i % 2 == 0 else 1) * int(x) for i, x in enumerate(reversed(Body))]
+        Data = [(3, 1)[i % 2] * int(x) for i, x in enumerate(reversed(Body))]
+        return (10 - sum(Data)) % 10
 
     def Check(self) -> bool:
         return  (self.Code) and \
