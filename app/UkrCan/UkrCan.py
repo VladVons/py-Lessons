@@ -24,7 +24,6 @@ def LoadOptions():
     Parser.add_argument('--can', default='can.xls')
     return Parser
 
-
 def LoadFile_Ukr(aFile: str) -> dict:
     assert(os.path.isfile(aFile)), f'file not exists {aFile}'
 
