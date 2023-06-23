@@ -3,6 +3,7 @@
 # License: GNU, see LICENSE for more details
 
 
+import os
 import sys
 import argparse
 from xlrd import open_workbook
@@ -12,7 +13,7 @@ def FileWrite(aFile: str, aData: dict):
     Data = [f'{Key}\t{Val}' for Key, Val in aData.items()]
     Data = '\n'.join(Data)
     File = f'{aFile}.txt'
-    print(File)
+    print('saving file', File)
     with open(File, 'w', encoding='utf8') as F:
         F.write(Data)
 
@@ -21,16 +22,17 @@ def LoadOptions():
     Parser = argparse.ArgumentParser(usage = Usage)
     Parser.add_argument('--ukr', default='ukr.xls')
     Parser.add_argument('--can', default='can.xls')
-    return Parser.parse_args()
+    return Parser
 
 
 def LoadFile_Ukr(aFile: str) -> dict:
-    Res = {}
+    assert(os.path.isfile(aFile)), f'file not exists {aFile}'
 
+    Res = {}
     WBook = open_workbook(aFile)
     Sheet = WBook.sheet_by_index(0)
 
-    for i in range(2, Sheet.nrows):
+    for i in range(0, Sheet.nrows):
         Row = Sheet.row_values(i)
         Code, *Name = Row[0].split(' ', maxsplit=1)
         if (Name):
@@ -38,12 +40,13 @@ def LoadFile_Ukr(aFile: str) -> dict:
     return Res
 
 def LoadFile_Can(aFile: str) -> dict:
-    Res = {}
+    assert(os.path.isfile(aFile)), f'file not exists {aFile}'
 
+    Res = {}
     WBook = open_workbook(aFile)
     Sheet = WBook.sheet_by_index(0)
 
-    for i in range(2, Sheet.nrows):
+    for i in range(0, Sheet.nrows):
         Row = Sheet.row_values(i)
         Code = Row[0].replace('TER', '')
         Res[Code] = Row[1]
@@ -56,20 +59,28 @@ def Compare(aData1: dict, aData2: dict):
             Res[Key] = Val
     return Res
 
+def Parse(aOptions):
+    DataUkr = LoadFile_Ukr(aOptions.ukr)
+    DataCan = LoadFile_Can(aOptions.can)
 
-print('Compare UkrCan, v1.01, VladVons@gmail.com')
-print(sys.version)
-print(sys.executable)
+    Dif = Compare(DataUkr, DataCan)
+    FileWrite(aOptions.ukr, Dif)
 
-Options = LoadOptions()
+    Dif = Compare(DataCan, DataUkr)
+    FileWrite(aOptions.can, Dif)
 
-DataUkr = LoadFile_Ukr(Options.ukr)
-DataCan = LoadFile_Can(Options.can)
+    print('done')
 
-Dif = Compare(DataUkr, DataCan)
-FileWrite(Options.ukr, Dif)
+def Main():
+    print('Compare UkrCan, v1.01, VladVons@gmail.com')
+    print(sys.version)
+    print(sys.executable)
 
-Dif = Compare(DataCan, DataUkr)
-FileWrite(Options.can, Dif)
+    Parser = LoadOptions()
+    if (len(sys.argv) == 1):
+        Parser.print_help()
+    else:
+        Options = Parser.parse_args()
+        Parse(Options)
 
-print('done')
+Main()
