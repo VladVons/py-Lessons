@@ -23,7 +23,9 @@ class TWebSrv():
 
     async def rHello(self, aRequest):
         self.Cnt += 1
-        return web.Response(text = f'Hello, world {self.Cnt}')
+        Data = {'cnt': self.Cnt, 'method': aRequest.method, 'path': aRequest.path, 'path_qs': aRequest.path_qs, 'query_string': aRequest.query_string}
+        Msg = [f'{Key}: {Val}' for Key, Val in Data.items()]
+        return web.Response(content_type = 'text/html', text = '<br>'.join(Msg))
 
     async def Run(self, aPort: int):
         App = web.Application()
