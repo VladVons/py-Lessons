@@ -21,15 +21,38 @@ class TWebSrv():
     def __init__(self):
         self.Cnt = 0
 
-    async def rHello(self, aRequest):
+    async def rGetIndex(self, aRequest):
         self.Cnt += 1
-        Data = {'cnt': self.Cnt, 'method': aRequest.method, 'path': aRequest.path, 'path_qs': aRequest.path_qs, 'query_string': aRequest.query_string}
+        Data = {'cnt': self.Cnt, 'method': aRequest.method, 'path': aRequest.path, 'path_qs': aRequest.path_qs, 'query_string': aRequest.query_string, 'remote': aRequest.remote}
         Msg = [f'{Key}: {Val}' for Key, Val in Data.items()]
+        Msg = ['urls:', '/', '/post/json', '/post/text', ''] + Msg
+        print('\n'.join(Msg))
         return web.Response(content_type = 'text/html', text = '<br>'.join(Msg))
+
+    async def rPostJson(self, aRequest):
+        self.Cnt += 1
+        Post = await aRequest.json()
+        Data = {
+            'cnt': self.Cnt
+        }
+        Data.update(Post)
+
+        Msg = [f'{Key}: {Val}' for Key, Val in Data.items()]
+        print('\n'.join(Msg))
+        return web.json_response(data = Data)
+
+    async def rPostText(self, aRequest):
+        self.Cnt += 1
+        Post = await aRequest.read()
+        Data =  'Replay: ' + Post.decode('utf-8')
+        print(Data)
+        return web.Response(text = Data)
 
     async def Run(self, aPort: int):
         App = web.Application()
-        App.add_routes([web.get('/', self.rHello)])
+        App.add_routes([web.get('/', self.rGetIndex)])
+        App.add_routes([web.post('/post/json', self.rPostJson)])
+        App.add_routes([web.post('/post/text', self.rPostText)])
 
         Runner = web.AppRunner(App)
         try:

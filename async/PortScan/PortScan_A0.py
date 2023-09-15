@@ -94,9 +94,9 @@ def Scan(aHosts: list[str], aPorts: list[int]):
 
 StartAt = time.time()
 #Hosts = GetIpRange('192.168.11.0/24')
-Hosts = ['195.140.244.43']
+Hosts = ['94.247.62.24']
 #Ports = [22, 53, 80, 139, 443, 3389, 8006, 8080]
-Ports = list(range(1, 65535))
+Ports = list(range(10000, 11000))
 
 Scan(Hosts, Ports)
 print('time: %0.2f sec' % (round(time.time() - StartAt, 2)))
