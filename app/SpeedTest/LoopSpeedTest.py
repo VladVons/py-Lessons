@@ -45,7 +45,8 @@ def SpeedFunc(aFunc, aArr, aFind, aCount):
     print('Method: %s, Time: %0.2f, Found: %d' % (aFunc.__name__, time.time() - Start, Res))
 
 def SpeedAll(aArr, aFind, aCount):
-    Methods = [Test_01, Test_03, Test_04]
+    print()
+    Methods = [Test_01,Test_02,  Test_03, Test_04]
     for Method in Methods:
         SpeedFunc(Method, aArr, aFind, aCount)
 
