@@ -9,7 +9,9 @@ Method: Test_03, Time: 0.11, Found: 6
 Method: Test_04, Time: 0.04, Found: 6
 '''
 
+import sys
 import time
+import random
 
 
 def Test_01(aArr, aFind):
@@ -46,9 +48,13 @@ def SpeedFunc(aFunc, aArr, aFind, aCount):
 
 def SpeedAll(aArr, aFind, aCount):
     print()
+    print('python ver', sys.version)
+
+    Start = time.time()
     Methods = [Test_01,Test_02,  Test_03, Test_04]
     for Method in Methods:
         SpeedFunc(Method, aArr, aFind, aCount)
+    print('Total: %0.2f' % (time.time() - Start))
 
 #---
 def DTimer(aFunc):
@@ -66,7 +72,8 @@ def Test_04_Decor(aArr, aFind):
 
 
 #---
-Arr1 = [2, 3, 7, 1, 5, 3, 12, 18, 3, 4, 3, 1, 16, 9, 7, 3, 3]
+#Arr1 = [2, 3, 7, 1, 5, 3, 12, 18, 3, 4, 3, 1, 16, 9, 7, 3, 3]
+Arr1 = [random.randint(1, 10) for _ in range(100)]
 
 SpeedAll(Arr1, 3, 1*1000000)
 #Test_04_Decor(Arr1, 3)
