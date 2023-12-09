@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 Dir=~/VirtEnv
 
 py=python3
@@ -14,3 +15,5 @@ source $Dir/$py/bin/activate
 $py -B LoopSpeedTest.py
 
 php LoopSpeedTest.php
+
+./LoopSpeedTest2
