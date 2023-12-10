@@ -67,8 +67,8 @@ function DTimer($aFunc) {
 
 $Arr1 = array_map(function () {
     return rand(1, 10);
-}, range(1, 100));
+}, range(1, 100*1000));
 
-SpeedAll($Arr1, 3, 1 * 1000000);
+SpeedAll($Arr1, 3, 1*1000);
 // Test_04_Decor($Arr1, 3);
 ?>

@@ -2,11 +2,6 @@
 python lesson.
 loop speed test 
 2022.01.29
-
-Output:
-Method: Test_01, Time: 0.33, Found: 6
-Method: Test_03, Time: 0.11, Found: 6
-Method: Test_04, Time: 0.04, Found: 6
 '''
 
 import sys
@@ -73,7 +68,7 @@ def Test_04_Decor(aArr, aFind):
 
 #---
 #Arr1 = [2, 3, 7, 1, 5, 3, 12, 18, 3, 4, 3, 1, 16, 9, 7, 3, 3]
-Arr1 = [random.randint(1, 10) for _ in range(100)]
+Arr1 = [random.randint(1, 10) for _ in range(100*1000)]
 
-SpeedAll(Arr1, 3, 1*1000000)
+SpeedAll(Arr1, 3, 1*1000)
 #Test_04_Decor(Arr1, 3)
