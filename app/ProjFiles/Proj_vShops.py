@@ -9,6 +9,7 @@ def Main():
         'Task/SrvView/__init__.py', 
         'Task/SrvCtrl/__init__.py', 
         'Task/SrvModel/__init__.py', 
+        'Task/SrvImg/__init__.py', 
         'Task/Price/__init__.py',
         'Task/Queue/__init__.py'
     ])
