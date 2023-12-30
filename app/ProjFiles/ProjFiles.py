@@ -47,7 +47,7 @@ class TFiles(list):
         return Res
 
 class TProjFiles():
-    def __init__(self, aSrc: str = ''):
+    def __init__(self, aSrc: str = '', aDst: str = 'Release'):
         self.PkgExt = set()
         self.PkgInt = set()
 
@@ -61,6 +61,7 @@ class TProjFiles():
             os.chdir(aSrc)
         else:
             self.Dst = './'
+        self.DirDst = self.Dst + aDst
 
     def _FileAdd(self, aFile: str):
         if (self.Files.Add(aFile)):
@@ -142,19 +143,24 @@ class TProjFiles():
                     self._Find(aFile, F2.split(','), F3.split(','))
         self._FileAdd(aFile)
 
-    def FilesLoad(self, aFiles: list):
-        for File in aFiles:
-            if (not File.startswith('-')):
-                self.FileLoad(File)
+    def FilesLoad(self, aFiles: list[str]):
+        for xFile in aFiles:
+            if (not xFile.startswith('-')):
+                self.FileLoad(xFile)
 
-    def DirsLoad(self, aDirs: list, aAll: bool = False):
-        for Dir in aDirs:
-            if (Dir.startswith('-')):
+    def DirsCreate(self, aDirs: list[str]):
+        for xDir in aDirs:
+            Path = f'{self.DirDst}/{xDir}'
+            os.makedirs(Path, exist_ok=True)
+
+    def DirsLoad(self, aDirs: list[str], aAll: bool = False):
+        for xDir in aDirs:
+            if (xDir.startswith('-')):
                 continue
 
-            for Root, Dirs, Files in os.walk(Dir):
-                for File in Files:
-                    Path = Root + '/' + File
+            for Root, Dirs, Files in os.walk(xDir):
+                for xFile in Files:
+                    Path = Root + '/' + xFile
                     if (aAll):
                         if (Path not in self.Files) and (not self.Files.Filter(Path)):
                             if (Path.endswith('.py')):
@@ -187,25 +193,24 @@ class TProjFiles():
             F.write('\n'.join(PkgExt))
             F.write('\n')
 
-    def Release(self, aDir: str = 'Release'):
+    def Release(self):
         def Copy():
-            DirDst = self.Dst + aDir
             for Idx, File in enumerate(sorted(self.Files)):
-                Dir = DirDst + '/' + os.path.dirname(File)
+                Dir = self.DirDst + '/' + os.path.dirname(File)
                 os.makedirs(Dir, exist_ok=True)
-                shutil.copy(File, self.Dst + aDir + '/' + File)
+                shutil.copy(File, self.DirDst + '/' + File)
 
                 #Size = os.path.getsize(File)
                 #print('%2d, %4.1fk, %s' % (Idx + 1, Size / 1000, File))
             print()
-            self.Requires(DirDst)
+            self.Requires(self.DirDst)
 
         def Info():
-            print(f'Project: {aDir}')
+            print(f'Project: {self.DirDst}')
             print()
             print(' No Ext Count     Size  Lines')
             print('------------------------------')
- 
+
             FilesAll = SizeAll = LinesAll = 0
             for Idx, (Key, Val) in enumerate(sorted(self.Files.GetExtInf().items())):
                 Files = len(Val)
