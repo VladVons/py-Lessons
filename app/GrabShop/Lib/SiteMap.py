@@ -4,11 +4,14 @@
 
 
 import os
+import re
 import logging
 import json
+import gzip
 import xml.dom.minidom as dom
 #
 from .Download import TDownload
+from .Misc import FilterKeyErr
 
 
 class TSiteMap():
@@ -29,12 +32,13 @@ class TSiteMap():
         UrlDown = await self.Download.GetUrl(aUrl)
         Err = FilterKeyErr(UrlDown)
         if (not Err):
-            Data = UrlDown['Data']
-            Status = UrlDown['Status']
+            Data = UrlDown['data']
+            Status = UrlDown['status']
             if (Status == 200):
                 if (aUrl.endswith('.xml.gz')):
                     Data = gzip.decompress(Data)
 
+                Data = Data.decode("utf-8")
                 Urls = re.findall('<loc>(.*?)</loc>', Data)
                 for Url in Urls:
                     if (Url.endswith('.xml')) or (Url.endswith('.xml.gz')):
@@ -42,7 +46,32 @@ class TSiteMap():
                     else:
                         Res.append(Url.rstrip('/'))
             else:
-                Log.Print(1, 'e', 'Sitemap error %s, %s' % (Status, self.UrlRoot))
+                logging.info('Sitemap error %s', Status)
+        return Res
+
+    async def SaveSiteMap(self, aUrl: str) -> list:
+        Res = None
+
+        UrlDown = await self.Download.GetUrl(aUrl)
+        Err = FilterKeyErr(UrlDown)
+        if (not Err):
+            Data = UrlDown['data']
+            Status = UrlDown['status']
+            if (Status == 200):
+                if (aUrl.endswith('.xml.gz')):
+                    Data = gzip.decompress(Data)
+
+                Res = Data.decode('utf-8')
+                Urls = re.findall('<loc>(.*?)</loc>', Res)
+                for Url in Urls:
+                    if (Url.endswith('.xml')) or (Url.endswith('.xml.gz')):
+                        File = Url.rsplit('/', maxsplit=1)[-1]
+                        FileData = await self.SaveSiteMap(Url)
+                        logging.info('Save %s', File)
+                        with open(File, 'w') as F:
+                            F.write(FileData)
+            else:
+                logging.info('Sitemap error %s', Status)
         return Res
 
     def _DoParse(self, aData: dict):
