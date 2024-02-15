@@ -17,6 +17,7 @@ class TDownload():
         self.Dir = Dir.split('.')[0]
         os.makedirs(self.Dir, exist_ok = True)
         self.Cnt = 0
+        self.TotalRead = 0
 
     def WriteFile(self, aName: str, aData: bytes):
         Path = self.Dir + '/' + aName
@@ -31,9 +32,10 @@ class TDownload():
             except Exception as E:
                 print('Err', E)
             else:
+                self.TotalRead += len(Data)
                 self.Cnt -= 1
                 if (self.Cnt % 10 == 0):
-                    print('remains', self.Cnt)
+                    print('remains', self.Cnt, 'read (Kb)', self.TotalRead // 1000)
 
     async def FetchSem(self, aUrl: str, aSession, aSem, aIdx: int):
         async with aSem:
@@ -55,7 +57,10 @@ class TDownload():
 StartT = time.time()
 #Url = 'https://loremflickr.com/800/600/girl'
 #Url = 'http://localhost/phpHello.php'
-Url = 'http://localhost:8080'
-Task = TDownload().Main(Url, 10000, 1000)
+#Url = 'http://localhost:8080'
+#
+Url = 'https://kaluna.te.ua/search/?query=240'
+#Url = 'https://used.1x1.com.ua/?route=product0/search&q=dell'
+Task = TDownload().Main(Url, 1000, 100)
 asyncio.run(Task)
 print('async duration (s) %0.2f' % (time.time() - StartT))
