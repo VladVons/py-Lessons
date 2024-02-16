@@ -18,6 +18,7 @@ class TDownload():
         os.makedirs(self.Dir, exist_ok = True)
         self.Cnt = 0
         self.TotalRead = 0
+        self.TimeLap = time.time()
 
     def WriteFile(self, aName: str, aData: bytes):
         Path = self.Dir + '/' + aName
@@ -35,7 +36,8 @@ class TDownload():
                 self.TotalRead += len(Data)
                 self.Cnt -= 1
                 if (self.Cnt % 10 == 0):
-                    print('remains', self.Cnt, 'read (Kb)', self.TotalRead // 1000)
+                    print('remains %d' % self.Cnt, 'read %d Kb' % (self.TotalRead / 1000), 'time %0.2f sec' % (time.time() - self.TimeLap))
+                    self.TimeLap = time.time()
 
     async def FetchSem(self, aUrl: str, aSession, aSem, aIdx: int):
         async with aSem:
@@ -59,8 +61,8 @@ StartT = time.time()
 #Url = 'http://localhost/phpHello.php'
 #Url = 'http://localhost:8080'
 #
-Url = 'https://kaluna.te.ua/search/?query=240'
-#Url = 'https://used.1x1.com.ua/?route=product0/search&q=dell'
-Task = TDownload().Main(Url, 1000, 100)
+#Url = 'https://kaluna.te.ua/search/?query=240'
+Url = 'https://used.1x1.com.ua/?route=product0/search&q=dell'
+Task = TDownload().Main(Url, 1000, 20)
 asyncio.run(Task)
 print('async duration (s) %0.2f' % (time.time() - StartT))
