@@ -63,6 +63,10 @@ class TProjFiles():
             self.Dst = './'
         self.DirDst = self.Dst + aDst
 
+    @staticmethod
+    def _HasComment(aData: list[str]) -> list[str]:
+        return [x for x in aData if not x.startswith('-')]
+
     def _FileAdd(self, aFile: str):
         if (self.Files.Add(aFile)):
             self.FileLoad(aFile)
@@ -144,20 +148,20 @@ class TProjFiles():
         self._FileAdd(aFile)
 
     def FilesLoad(self, aFiles: list[str]):
-        for xFile in aFiles:
-            if (not xFile.startswith('-')):
-                self.FileLoad(xFile)
+        for xFile in self._HasComment(aFiles):
+            self.FileLoad(xFile)
 
     def DirsCreate(self, aDirs: list[str]):
-        for xDir in aDirs:
+        for xDir in self._HasComment(aDirs):
             Path = f'{self.DirDst}/{xDir}'
             os.makedirs(Path, exist_ok=True)
 
-    def DirsLoad(self, aDirs: list[str], aAll: bool = False):
-        for xDir in aDirs:
-            if (xDir.startswith('-')):
-                continue
+    def FilesCopy(self, aFiles: list[str]):
+        for xFile in self._HasComment(aFiles):
+            self.Files.Add(xFile)
 
+    def DirsLoad(self, aDirs: list[str], aAll: bool = False):
+        for xDir in self._HasComment(aDirs):
             for Root, Dirs, Files in os.walk(xDir):
                 for xFile in Files:
                     Path = Root + '/' + xFile

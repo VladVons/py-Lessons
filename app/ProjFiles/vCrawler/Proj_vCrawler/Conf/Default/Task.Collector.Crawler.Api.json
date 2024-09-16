@@ -1,0 +1,20 @@
+{
+    "dir_route": "MVC/Collector/crawler",
+    "loader": {
+        "model": {
+            "type": "fs",
+            "module": "Task.Collector.SrvModel.Api",
+            "class": "ApiModel"
+        },
+        "_model": {
+            "type": "url",
+            "url": "http://1x1.com.ua:8182/api",
+            "user": "user01",
+            "password": "passw01"
+        }
+    },
+    "auth" : {
+        "login": "dev-vlad",
+        "passw": "polkmn"
+    }
+}
