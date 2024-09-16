@@ -22,14 +22,14 @@ Clean()
   #find . -name '*.log' -exec rm -v -f -R {} \;
   find . -name '__pycache__' -exec rm -v -f -R {} \;
 
-  echo
-  echo "Statistics *.py"
+  #echo
+  #echo "Statistics *.py"
   #find . -name '*.py' -ls | awk '{total += $7} END {print total}'
-  find . -name '*.py' | xargs wc
+  #find . -name '*.py' | xargs wc
 
-  echo
-  echo "Statistics *.json"
-  find . -name '*.json' | xargs wc
+  #echo
+  #echo "Statistics *.json"
+  #find . -name '*.json' | xargs wc
 }
 
 GitAuth()
