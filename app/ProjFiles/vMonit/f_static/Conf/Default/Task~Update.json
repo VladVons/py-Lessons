@@ -6,7 +6,7 @@
         "enabled": false
       },
       "update": { 
-        "url": "https://download.1x1.com.ua/private/update/py-vCrawler_Collector/ver.json",
+        "url": "https://download.1x1.com.ua/private/update/py-vCrawler/ver.json",
         "login": "collector",
         "password": "col2024",
         "action": "stop",

@@ -1,3 +1,8 @@
+# Created: 2024.09.10
+# Author: Vladimir Vons, Oster Inc.
+# License: GNU, see LICENSE for more details
+
+
 import os
 from ProjFiles import TProjFiles
 
@@ -7,9 +12,9 @@ def Main():
 
     PF.FilesCopy([
         'vCrawler.sh',
-        'Conf/Default/Task.py',
-        'Conf/Default/Task.Collector.Crawler.Api.json',
-        'Conf/Default/Task~Collector~Crawler.json'
+        'Conf/Client/Task.py',
+        'Conf/Client/Task.Collector.Crawler.Api.json',
+        'Conf/Client/Task~Collector~Crawler.json'
     ])
 
     PF.FilesLoad([
@@ -18,6 +23,7 @@ def Main():
     ])
 
     PF.DirsLoad([
+      'MVC/Collector/crawler',
       'Task/Collector/Crawler'
     ])
 

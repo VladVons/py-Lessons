@@ -1,11 +1,7 @@
 #!/bin/bash
 
-Dir="./Proj_vMonit"
-Ext="*.py"
 
-python3 Main.py
+cDir="./Proj_vMonit"
+source ../Common.sh
 
-cp f_static/Task~Update.json $Dir/Conf/Default 
-
-cd $Dir
-tar -czf .${Dir}.tar.gz .
+Build
