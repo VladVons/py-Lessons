@@ -1,37 +1,52 @@
 {
   "app": [
     {
-      "info": {
+      "common": {
         "descr": "Crawler collect bot",
-        "enabled": false
+        "enabled": true,
+        "sleep": 60
       },
-      "update": { 
-        "url": "https://download.1x1.com.ua/private/update/py-vCrawler/ver.json",
-        "login": "collector",
-        "password": "col2024",
-        "action": "stop",
-        "sleep": 10
-      },
-      "run": {
-        "dir": "/root/projects/vCrawler",
-        "cmd": "vCrawler.sh",
-        "sleep": 5,
-        "delay": 3
+      "checker": {
+        "update": { 
+          "url": "https://download.1x1.com.ua/private/update/py-vCrawler",
+          "login": "collector",
+          "password": "col2024",
+          "action": "stop",
+          "sleep": 600,
+          "create_dir": true
+        },
+        "run": {
+          "dir": "/usr/lib/vCrawler",
+          "cmd": "vCrawler.sh",
+          "sleep": 30,
+          "delay": 5
+        },
+        "watch_file": {
+          "files": [
+            "$checker.run.dir/vCrawler.log"
+          ],
+          "delay": 10,
+          "sleep": 300,
+          "action": "stop"
+        }
       }
     },
     {
-      "info": {
-        "descr": "vMonit itself"
+      "common": {
+        "descr": "vMonit itself",
+        "enabled": true
       },
-      "update": { 
-        "url": "https://download.1x1.com.ua/private/update/py-vMonit/ver.json",
-        "login": "collector",
-        "password": "col2024",
-        "action": "stop",
-        "sleep": 10
-      },
-      "run": {
-        "dir": "/root/projects/vMonit"
+      "checker": { 
+        "update": { 
+          "url": "https://download.1x1.com.ua/private/update/py-vMonit",
+          "login": "collector",
+          "password": "col2024",
+          "action": "stop",
+          "sleep": 360
+        },
+        "run": {
+          "dir": "/usr/lib/vMonit"
+        }
       }
     }
   ]

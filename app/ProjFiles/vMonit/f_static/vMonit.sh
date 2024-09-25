@@ -8,5 +8,5 @@ source $File
 #$py -V
 while true; do
     $py -B vMonit.py
-    sleep 5
+    sleep 60
 done

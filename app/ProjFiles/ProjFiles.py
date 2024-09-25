@@ -50,6 +50,7 @@ class TProjFiles():
     def __init__(self, aSrc: str = '', aDst: str = 'Release'):
         self.PkgExt = set()
         self.PkgInt = set()
+        self.PkgSkip = []
 
         self._BuiltIn = [x for x in sys.builtin_module_names if not x.startswith('_')]
         #self._DirExtPkg = site.getsitepackages()
@@ -66,6 +67,17 @@ class TProjFiles():
     @staticmethod
     def _HasComment(aData: list[str]) -> list[str]:
         return [x for x in aData if not x.startswith('-')]
+
+    @staticmethod
+    def _GetFilesRecurs(aDir: str) -> list[str]:
+        Res = []
+        for Entry in os.listdir(aDir):
+            Path = os.path.join(aDir, Entry)
+            if os.path.isdir(Path):
+                Res.extend(TProjFiles._GetFilesRecurs(Path))
+            else:
+                Res.append(Path)
+        return Res
 
     def _FileAdd(self, aFile: str):
         if (self.Files.Add(aFile)):
@@ -108,6 +120,9 @@ class TProjFiles():
     def GetPkgExt(self) -> list:
         return sorted(set([x.split('.')[0] for x in self.PkgExt]))
 
+    def PkgIgnore(self, aVal: list):
+        self.PkgSkip = aVal
+
     def FileLoad(self, aFile: str):
         if (not os.path.exists(aFile)):
             print('File not found', aFile)
@@ -144,7 +159,10 @@ class TProjFiles():
                 if (F1):
                     self._Find(aFile, F1.split(','))
                 else:
-                    self._Find(aFile, F2.split(','), F3.split(','))
+                    Pkgs = F3.split(',')
+                    Skip =  [xPkg for xPkg in Pkgs if (xPkg in self.PkgSkip)]
+                    if (not Skip):
+                        self._Find(aFile, F2.split(','), Pkgs)
         self._FileAdd(aFile)
 
     def FilesLoad(self, aFiles: list[str]):
@@ -158,7 +176,12 @@ class TProjFiles():
 
     def FilesCopy(self, aFiles: list[str]):
         for xFile in self._HasComment(aFiles):
-            self.Files.Add(xFile)
+            if (os.path.isdir(xFile)):
+                Files = self._GetFilesRecurs(xFile)
+                for xFile in Files:
+                    self.Files.Add(xFile)
+            else:
+                self.Files.Add(xFile)
 
     def DirsLoad(self, aDirs: list[str], aAll: bool = False):
         for xDir in self._HasComment(aDirs):
