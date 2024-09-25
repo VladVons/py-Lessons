@@ -10,15 +10,12 @@ def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vCrawler/src', 'Proj_vCrawlerView')
 
     PF.FilesCopy([
-        'vCrawler.sh',
-        'Conf/View'
     ])
 
     PF.FilesLoad([
         'vCrawler.py',
-
-        'IncP/LibModel.py',
-        'IncP/LibCtrl.py'
+        'IncP/LibCtrl.py',
+        'IncP/LibModel.py'
     ])
 
     PF.DirsLoad([
