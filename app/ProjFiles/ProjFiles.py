@@ -130,6 +130,7 @@ class TProjFiles():
 
         _Size, Lines = GetLines(aFile)
         if (not Lines):
+            self.Files.Add(aFile)
             return
 
         Patt1 = r'import\s+(.*)'
