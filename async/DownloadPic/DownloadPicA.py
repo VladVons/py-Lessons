@@ -25,14 +25,6 @@ class TDownload():
         with open(Path, 'wb') as FileH:
             FileH.write(aData)
 
-    async def WriteFileA(self, aName: str, aData):
-        import aiofile
-
-        Path = self.Dir + '/' + aName
-        print('WriteFileA', Path)
-        async with aiofile.async_open(Path, 'wb') as FileH:
-            await FileH.write(aData)
-
     async def Fetch(self, aUrl: str, aSession, aCnt):
         async with aSession.get(aUrl) as Response:
             print('Fetch', aCnt)
