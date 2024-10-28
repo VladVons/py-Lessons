@@ -1,0 +1,84 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            85:95:d3:14:36:42:bc:15:4b:98:7c:11:8f:d7:6a:18
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=arsenal
+        Validity
+            Not Before: Oct 16 09:49:58 2024 GMT
+            Not After : Jan 19 09:49:58 2027 GMT
+        Subject: CN=VladVons
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:a1:11:37:f8:79:ab:d4:bd:a1:89:0a:37:da:49:
+                    55:3c:73:6c:e0:17:e8:89:77:85:da:88:40:94:fd:
+                    77:d3:6c:86:4b:67:e5:98:59:ca:e0:f6:65:f7:e8:
+                    95:6f:f6:84:08:92:42:d1:ac:5d:c9:48:89:b2:f3:
+                    bd:4d:a1:9d:31:00:98:9e:39:37:83:d2:ab:1c:1a:
+                    4e:0b:bf:23:6d:8f:a8:d8:c7:59:bf:d1:82:46:aa:
+                    8f:e5:06:ec:75:83:05:e7:d3:46:9d:36:98:5e:dd:
+                    ca:be:98:3d:e4:5c:63:11:51:b8:d0:67:20:ae:78:
+                    63:0e:9f:e1:88:7a:8d:52:82:1b:63:cc:c0:94:60:
+                    c0:16:63:4a:48:36:74:b6:9e:2b:1e:c3:5b:b1:06:
+                    b0:92:66:a9:b9:0f:13:21:9d:40:5d:70:30:07:7c:
+                    1e:ef:12:cf:20:55:11:23:36:a8:52:c0:50:48:f3:
+                    5c:e2:6a:57:76:e8:9b:fb:49:ac:fe:8f:ec:4d:64:
+                    bb:7f:69:1e:e5:a8:9e:aa:2d:09:4a:50:a6:bd:f9:
+                    8d:8f:82:3d:ff:fc:3b:b2:4f:7a:bc:fd:73:dc:6a:
+                    b4:d7:44:90:c1:4e:41:cf:4a:fe:f5:55:9b:2c:3c:
+                    9b:d8:6f:cb:f4:7a:06:59:b7:b4:05:fc:24:6d:f1:
+                    00:37
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                37:6E:BB:5C:9B:FE:66:40:38:AD:35:25:2F:31:54:03:E4:96:5D:F5
+            X509v3 Authority Key Identifier: 
+                keyid:70:87:E8:61:27:E8:45:55:97:87:AC:63:3F:16:70:E8:D4:36:C4:2C
+                DirName:/CN=arsenal
+                serial:4D:10:AD:BA:94:E9:5D:87:35:AC:A6:34:93:AC:9F:23:28:3A:0B:DE
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication
+            X509v3 Key Usage: 
+                Digital Signature
+    Signature Algorithm: sha256WithRSAEncryption
+    Signature Value:
+        0e:5a:52:88:c0:54:72:ef:01:0b:74:d4:53:b4:33:d5:56:57:
+        0b:54:7d:e6:37:b7:ea:06:b4:4b:9d:9d:e4:17:ca:58:30:5c:
+        b1:d9:6f:60:5d:05:bb:a5:88:e5:ea:61:f4:f2:75:15:be:f6:
+        1e:bc:c2:9d:db:03:4b:69:55:a9:a2:99:8e:39:a0:4e:44:30:
+        df:ee:a8:70:c4:cc:11:ec:1d:ed:73:8b:45:1a:43:68:55:6a:
+        49:1e:3f:7a:e0:7e:4b:e1:ee:77:e8:77:eb:f5:69:5f:5d:81:
+        9c:db:77:fe:2b:22:60:55:d4:27:39:a5:b5:d2:18:94:a2:eb:
+        87:fa:51:1a:a4:7d:9b:32:d2:5c:6a:32:27:e8:67:29:62:52:
+        c4:cd:f9:77:ff:83:cd:bb:a1:7d:d8:ea:af:30:d6:33:03:d3:
+        03:c0:5d:6e:1c:95:1d:8f:8b:12:54:7f:aa:78:b1:8d:d8:45:
+        53:5c:18:e6:d7:bd:a8:d9:65:b0:1f:d5:fc:a1:ef:c8:fe:32:
+        76:8b:6d:fe:ec:4e:e5:40:06:f3:a0:11:6e:de:f4:cc:23:f4:
+        69:26:c2:29:a0:56:92:f2:14:c0:82:d4:c6:b8:fb:9d:83:d8:
+        7f:9c:cc:9d:05:b9:a1:43:98:e7:59:ff:72:67:b1:a3:71:f9:
+        10:97:07:32
+-----BEGIN CERTIFICATE-----
+MIIDTzCCAjegAwIBAgIRAIWV0xQ2QrwVS5h8EY/XahgwDQYJKoZIhvcNAQELBQAw
+EjEQMA4GA1UEAwwHYXJzZW5hbDAeFw0yNDEwMTYwOTQ5NThaFw0yNzAxMTkwOTQ5
+NThaMBMxETAPBgNVBAMMCFZsYWRWb25zMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAoRE3+Hmr1L2hiQo32klVPHNs4BfoiXeF2ohAlP1302yGS2flmFnK
+4PZl9+iVb/aECJJC0axdyUiJsvO9TaGdMQCYnjk3g9KrHBpOC78jbY+o2MdZv9GC
+RqqP5QbsdYMF59NGnTaYXt3Kvpg95FxjEVG40GcgrnhjDp/hiHqNUoIbY8zAlGDA
+FmNKSDZ0tp4rHsNbsQawkmapuQ8TIZ1AXXAwB3we7xLPIFURIzaoUsBQSPNc4mpX
+duib+0ms/o/sTWS7f2ke5aieqi0JSlCmvfmNj4I9//w7sk96vP1z3Gq010SQwU5B
+z0r+9VWbLDyb2G/L9HoGWbe0BfwkbfEANwIDAQABo4GeMIGbMAkGA1UdEwQCMAAw
+HQYDVR0OBBYEFDduu1yb/mZAOK01JS8xVAPkll31ME0GA1UdIwRGMESAFHCH6GEn
+6EVVl4esYz8WcOjUNsQsoRakFDASMRAwDgYDVQQDDAdhcnNlbmFsghRNEK26lOld
+hzWspjSTrJ8jKDoL3jATBgNVHSUEDDAKBggrBgEFBQcDAjALBgNVHQ8EBAMCB4Aw
+DQYJKoZIhvcNAQELBQADggEBAA5aUojAVHLvAQt01FO0M9VWVwtUfeY3t+oGtEud
+neQXylgwXLHZb2BdBbuliOXqYfTydRW+9h68wp3bA0tpVamimY45oE5EMN/uqHDE
+zBHsHe1zi0UaQ2hVakkeP3rgfkvh7nfod+v1aV9dgZzbd/4rImBV1Cc5pbXSGJSi
+64f6URqkfZsy0lxqMifoZyliUsTN+Xf/g827oX3Y6q8w1jMD0wPAXW4clR2PixJU
+f6p4sY3YRVNcGObXvajZZbAf1fyh78j+MnaLbf7sTuVABvOgEW7e9Mwj9Gkmwimg
+VpLyFMCC1Ma4+52D2H+czJ0FuaFDmOdZ/3JnsaNx+RCXBzI=
+-----END CERTIFICATE-----

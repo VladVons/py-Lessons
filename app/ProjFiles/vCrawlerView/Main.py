@@ -20,6 +20,7 @@ def Main():
 
     PF.DirsLoad([
       'MVC/Search',
+      'MVC/Search/view/assets/js',
       'Task/Search'
     ])
 

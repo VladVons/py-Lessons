@@ -1,0 +1,84 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            df:90:3b:a2:35:4e:63:b5:66:f5:c8:9e:a2:28:c0:e8
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: CN=oster
+        Validity
+            Not Before: Aug  1 22:08:40 2023 GMT
+            Not After : Nov  3 22:08:40 2025 GMT
+        Subject: CN=VladVons
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:d6:73:43:7e:a1:a2:a1:d7:aa:d3:4a:5a:f4:2d:
+                    78:12:12:c1:e2:ae:4e:f8:22:dc:54:a5:a2:52:fe:
+                    cd:9a:cc:bd:93:54:e0:5b:0b:0e:7f:2e:ee:0e:21:
+                    eb:1d:ad:61:4d:03:b2:f5:bf:6f:2b:4f:8f:87:3c:
+                    a8:bc:0e:1b:95:52:6a:be:1d:4b:4b:ff:6c:7e:51:
+                    d7:22:3b:7a:db:35:7b:30:49:64:ea:f2:7d:7a:a7:
+                    8e:87:fd:1a:28:07:27:76:68:8f:2f:03:ad:6b:a8:
+                    74:b8:9f:71:9b:83:69:fb:f5:69:2c:e2:00:19:ac:
+                    6c:46:fc:48:18:af:f2:43:c6:1e:60:e9:95:35:1b:
+                    fe:60:8c:19:ad:bc:73:bf:fc:19:69:78:f2:26:94:
+                    f9:6f:85:c6:12:c6:c5:62:08:a9:bb:d7:be:ba:72:
+                    b3:ed:05:54:23:cb:32:a1:5a:97:6f:63:2e:0b:9d:
+                    c9:62:a3:8c:08:3d:d8:fa:c9:98:25:cc:b8:f1:b2:
+                    fe:71:42:5c:94:dd:65:bd:8d:7e:a5:91:19:c2:2f:
+                    80:8a:d9:1b:31:0e:e0:0f:54:09:9b:97:d9:a0:90:
+                    30:dd:2a:c7:e5:57:1b:a5:e6:3e:c0:07:8c:af:fb:
+                    23:18:f8:ce:c4:76:52:10:31:d3:62:28:4c:c2:91:
+                    1f:ed
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                B8:87:34:55:04:60:50:FF:A9:93:3D:70:40:32:AB:F7:75:21:EE:B2
+            X509v3 Authority Key Identifier: 
+                keyid:AF:A6:B6:ED:4D:68:FE:20:CC:C4:93:A0:9F:F9:33:BA:D6:D7:81:F5
+                DirName:/CN=oster
+                serial:58:13:22:9D:C0:47:0A:7D:F1:7F:C3:BC:AB:EE:76:47:B3:84:F5:02
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication
+            X509v3 Key Usage: 
+                Digital Signature
+    Signature Algorithm: sha256WithRSAEncryption
+    Signature Value:
+        19:52:74:70:c1:81:a1:8f:c7:80:e6:b9:95:c9:e3:31:8b:e3:
+        53:4f:bb:55:f8:70:39:95:cf:29:36:2d:d3:f3:0a:bd:71:cb:
+        b1:53:dc:6f:63:7b:a4:79:7b:22:9b:07:3e:87:f9:a1:cc:f7:
+        1c:59:b5:29:52:49:19:0d:c9:75:fc:e9:6f:63:e1:ce:cc:35:
+        b7:93:a0:ba:0e:78:01:89:d4:9b:91:03:57:cc:36:ba:37:2d:
+        5b:bc:7f:22:1a:d8:15:d6:2f:e9:80:10:3d:8d:fd:35:5e:bd:
+        48:a9:01:91:1b:c5:30:aa:60:03:e1:65:56:5d:05:a4:c4:ad:
+        24:e4:d0:f7:7a:8c:0b:6f:06:43:73:4a:de:38:66:8a:da:7e:
+        03:5e:7b:39:a6:f3:d8:f7:4c:1a:45:8f:71:97:1f:e4:1e:16:
+        35:e2:ef:4e:2b:b4:a4:09:37:48:d5:92:ca:63:af:5a:34:99:
+        81:09:eb:eb:cc:d7:4f:6a:56:d8:dc:e1:2b:8e:34:80:f1:00:
+        c3:61:0f:e6:7a:3a:b4:9f:d7:ce:f3:1b:98:f7:fc:06:10:ee:
+        d1:6c:0d:91:a9:9e:7c:f2:33:db:90:33:51:ca:60:fb:13:e5:
+        1d:9b:92:13:02:ef:1a:c2:69:2e:9a:7f:1e:bf:dd:05:dc:d1:
+        8a:5a:e1:6d
+-----BEGIN CERTIFICATE-----
+MIIDSzCCAjOgAwIBAgIRAN+QO6I1TmO1ZvXInqIowOgwDQYJKoZIhvcNAQELBQAw
+EDEOMAwGA1UEAwwFb3N0ZXIwHhcNMjMwODAxMjIwODQwWhcNMjUxMTAzMjIwODQw
+WjATMREwDwYDVQQDDAhWbGFkVm9uczCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBANZzQ36hoqHXqtNKWvQteBISweKuTvgi3FSlolL+zZrMvZNU4FsLDn8u
+7g4h6x2tYU0DsvW/bytPj4c8qLwOG5VSar4dS0v/bH5R1yI7ets1ezBJZOryfXqn
+jof9GigHJ3Zojy8DrWuodLifcZuDafv1aSziABmsbEb8SBiv8kPGHmDplTUb/mCM
+Ga28c7/8GWl48iaU+W+FxhLGxWIIqbvXvrpys+0FVCPLMqFal29jLgudyWKjjAg9
+2PrJmCXMuPGy/nFCXJTdZb2NfqWRGcIvgIrZGzEO4A9UCZuX2aCQMN0qx+VXG6Xm
+PsAHjK/7Ixj4zsR2UhAx02IoTMKRH+0CAwEAAaOBnDCBmTAJBgNVHRMEAjAAMB0G
+A1UdDgQWBBS4hzRVBGBQ/6mTPXBAMqv3dSHusjBLBgNVHSMERDBCgBSvprbtTWj+
+IMzEk6Cf+TO61teB9aEUpBIwEDEOMAwGA1UEAwwFb3N0ZXKCFFgTIp3ARwp98X/D
+vKvudkezhPUCMBMGA1UdJQQMMAoGCCsGAQUFBwMCMAsGA1UdDwQEAwIHgDANBgkq
+hkiG9w0BAQsFAAOCAQEAGVJ0cMGBoY/HgOa5lcnjMYvjU0+7VfhwOZXPKTYt0/MK
+vXHLsVPcb2N7pHl7IpsHPof5ocz3HFm1KVJJGQ3Jdfzpb2Phzsw1t5Ogug54AYnU
+m5EDV8w2ujctW7x/IhrYFdYv6YAQPY39NV69SKkBkRvFMKpgA+FlVl0FpMStJOTQ
+93qMC28GQ3NK3jhmitp+A157Oabz2PdMGkWPcZcf5B4WNeLvTiu0pAk3SNWSymOv
+WjSZgQnr68zXT2pW2NzhK440gPEAw2EP5no6tJ/XzvMbmPf8BhDu0WwNkamefPIz
+25AzUcpg+xPlHZuSEwLvGsJpLpp/Hr/dBdzRilrhbQ==
+-----END CERTIFICATE-----
