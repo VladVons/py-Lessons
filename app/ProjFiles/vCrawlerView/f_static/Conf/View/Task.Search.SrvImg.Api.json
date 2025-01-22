@@ -1,0 +1,9 @@
+{
+  "dir_route": "MVC/Search/img",
+  "dir_root": "Data/img",
+  "dir_thumb": "thumb",
+  "size_thumb": 200,
+  "size_product": 1024,
+  "url": "https://it.findwares.com/img",
+  "no_image": "no-product.png"
+}

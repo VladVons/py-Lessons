@@ -10,7 +10,7 @@ Build()
 
   File="${cDir}.tar.gz"
   rm $File 2>/dev/null
-  tar -czf $File -C $cDir .
 
+  tar -czf $File -C $cDir .
   rm -r $cDir
 }

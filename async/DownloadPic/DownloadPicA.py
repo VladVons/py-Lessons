@@ -46,6 +46,6 @@ class TDownload():
 
 
 StartT = time.time()
-Task = TDownload().Main('https://loremflickr.com/800/600/girl', 100)
+Task = TDownload().Main('https://loremflickr.com/640/480', 20)
 asyncio.run(Task)
 print('async duration (s)', round(time.time() - StartT, 2))

@@ -9,6 +9,7 @@ import os
 import sys
 import re
 import shutil
+import glob
 
 
 def GetLines(aFile: str) -> tuple:
@@ -100,6 +101,22 @@ class TProjFiles():
             if (os.path.exists(File)):
                 return File
 
+    @staticmethod
+    def _DotToPath(aPath: str) -> str:
+        if (aPath.startswith('.')) and ('/' not in aPath):
+            if (aPath.startswith('...')):
+                Prefix = '/../../'
+                aPath = aPath[3:]
+            elif (aPath.startswith('..')):
+                Prefix = '/../'
+                aPath = aPath[2:]
+            else:
+                Prefix = '/./'
+                aPath = aPath[1:]
+        else:
+            Prefix = ''
+        return Prefix + aPath.replace('.', '/')
+
     def _PkgGroup(self, aFile: str, aVal1: str, aVal2: str):
         Module = aVal2 if (not aVal1) else aVal1
         if (not Module) or (Module in self.PkgInt) or (Module in self.PkgExt):
@@ -124,6 +141,8 @@ class TProjFiles():
         self.PkgSkip = aVal
 
     def FileLoad(self, aFile: str):
+        #print('-x1', aFile)
+
         if (not os.path.exists(aFile)):
             print('File not found', aFile)
             return
@@ -155,8 +174,9 @@ class TProjFiles():
 
             Find = re.findall(Patt1 + '|' + Patt2, Line)
             if (Find):
-                self._PkgGroup(aFile, *Find[0][:2])
-                F1, F2, F3 = [i.replace('.', '/') for i in Find[0]]
+                Find0 = Find[0]
+                self._PkgGroup(aFile, *Find0[:2])
+                F1, F2, F3 = [self._DotToPath(x) for x in Find0]
                 if (F1):
                     self._Find(aFile, F1.split(','))
                 else:
@@ -177,12 +197,16 @@ class TProjFiles():
 
     def FilesCopy(self, aFiles: list[str]):
         for xFile in self._HasComment(aFiles):
-            if (os.path.isdir(xFile)):
-                Files = self._GetFilesRecurs(xFile)
-                for xFile in Files:
-                    self.Files.Add(xFile)
+            if ('*' in xFile):
+                Files = glob.glob(xFile)
+                self.FilesCopy(Files)
             else:
-                self.Files.Add(xFile)
+                if (os.path.isdir(xFile)):
+                    Files = self._GetFilesRecurs(xFile)
+                    for xFile in Files:
+                        self.Files.Add(xFile)
+                else:
+                    self.Files.Add(xFile)
 
     def DirsLoad(self, aDirs: list[str], aAll: bool = False):
         for xDir in self._HasComment(aDirs):

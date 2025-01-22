@@ -10,15 +10,19 @@ def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vCrawler/src', 'Proj_vCrawlerView')
 
     PF.FilesCopy([
+      'Inc/ParserSpec/*.ini'
     ])
 
     PF.FilesLoad([
         'vCrawler.py',
         'IncP/LibCtrl.py',
+        'IncP/LibImg.py',
         'IncP/LibModel.py'
     ])
 
     PF.DirsLoad([
+      'Data/img',
+      'MVC/Search/view/assets/js',
       'MVC/Search',
       'Task/Search'
     ])

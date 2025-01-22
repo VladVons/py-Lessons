@@ -33,12 +33,17 @@ class TDownload():
             self.WriteFile('File_A_%03d.jpeg' % aCnt, Data)
             #await self.WriteFileA('File_A_%03d.jpeg' % aCnt, Data)
 
-    async def Main(self, aUrl: str, aCnt: int):
+    async def FetchSem(self, aUrl: str, aSession, aSem, aIdx: int):
+        async with aSem:
+             await self.Fetch(aUrl, aSession, aIdx)
+
+    async def Main(self, aUrl: str, aCnt: int, aMaxConn: int):
+        Sem = asyncio.Semaphore(aMaxConn)
         async with aiohttp.ClientSession() as Session:
             print('Main. create tasks', aCnt)
             Tasks = []
             for i in range(aCnt):
-                Task = asyncio.create_task(self.Fetch(aUrl, Session, i + 1))
+                Task = asyncio.create_task(self.FetchSem(aUrl, Session, Sem, i + 1))
                 Tasks.append(Task)
 
             print('Main. launch tasks', aCnt)
@@ -46,6 +51,6 @@ class TDownload():
 
 
 StartT = time.time()
-Task = TDownload().Main('https://loremflickr.com/800/600/girl', 100)
+Task = TDownload().Main('https://loremflickr.com/640/480', 50, 10)
 asyncio.run(Task)
 print('async duration (s)', round(time.time() - StartT, 2))
