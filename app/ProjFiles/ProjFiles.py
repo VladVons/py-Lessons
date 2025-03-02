@@ -258,8 +258,8 @@ class TProjFiles():
             self.Requires(self.DirDst)
 
         def Info():
-            print(f'Project: {self.DirDst}')
-            print()
+            Project = self.DirDst.rsplit('/', maxsplit=1)[-1]
+            print(f'Project: {Project}')
             print(' No Ext Count     Size  Lines')
             print('------------------------------')
 

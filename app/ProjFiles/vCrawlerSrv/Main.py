@@ -10,7 +10,7 @@ def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vCrawler/src', 'Proj_vCrawlerSrv')
 
     PF.FilesCopy([
-        'vCrawler.sh'
+      'Inc/ParserSpec/LibComp/*.ini'
     ])
 
     PF.FilesLoad([

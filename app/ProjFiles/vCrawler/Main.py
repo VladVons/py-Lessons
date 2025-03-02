@@ -9,10 +9,6 @@ from ProjFiles import TProjFiles
 def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vCrawler/src', 'Proj_vCrawler')
 
-    PF.FilesCopy([
-        'vCrawler.sh'
-    ])
-
     PF.FilesLoad([
         'vCrawler.py',
         'IncP/LibCrawler.py'

@@ -15,4 +15,5 @@ __pycache__
 .idea
 .secret.txt
 */Data/Price/
+*/backup/
 **/Proj_*/
