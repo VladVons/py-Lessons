@@ -38,7 +38,7 @@ https://it.findwares.com/uk/?adv=1-{Id}#a-content
 
 class TAdver():
     def __init__(self):
-        self.Sleep = 30
+        self.Sleep = 120
         Connect = {
             'aUrl': 'http://192.168.2.208:8080',
             'aUser': 'sms',
@@ -70,7 +70,7 @@ class TAdver():
         Dbl.Load(aName)
         for Rec in Dbl:
             Phone = Rec.phone.replace('+38', '')
-            if (not Phone.startswith('-')) and (Phone not in Sent):
+            if (Phone not in Sent) and (not Phone.startswith('-')):
                 Data = {
                     'id': Rec.id,
                     'phones': [Phone],
@@ -92,19 +92,21 @@ class TAdver():
         headers = {name.lower(): idx for idx, name in enumerate(headers)}
 
         for row in ws.iter_rows(min_row=2, values_only=True):
-            Obl = GetField('область')
-            if (Obl == 'Хмельницька область'):
-                Data = {
-                    'id': GetField('id автора'),
-                    'phones': [GetField("телефон 1")],
-                    'name':  GetField("ім'я"),
-                }
-                await self.SendDict(Data)
+            Phone = GetField("телефон 1")
+            if (Phone not in Sent):
+                Obl = GetField('область')
+                if (Obl == 'Хмельницька область'):
+                    Data = {
+                        'id': GetField('id автора'),
+                        'phones': [Phone],
+                        'name':  GetField("ім'я"),
+                    }
+                    await self.SendDict(Data)
 
 
     async def Test(self):
-        #Text = FmtText.format(Name='Володимир')
-        Text = 'Hello'
+        Text = FmtText.format(Name='Володимир', Id=12345)
+        #Text = 'Hello'
         Phones = ['0976646510']
         Res = await self.SmsGW.Send(Phones, Text)
         #Res = await self.SmsGW.Status('KeYuIsLPEq7sLl-5ro1BF')
