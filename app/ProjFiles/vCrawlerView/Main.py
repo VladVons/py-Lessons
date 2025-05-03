@@ -10,7 +10,8 @@ def Main():
     PF = TProjFiles('/home/vladvons/Projects/py/py-vCrawler/src', 'Proj_vCrawlerView')
 
     PF.FilesCopy([
-      'Inc/ParserSpec/LibComp/*.ini'
+      'Inc/ParserSpec/LibComp/*.ini',
+      'Data/Chat/vlad_site.session'
     ])
 
     PF.FilesLoad([
@@ -24,7 +25,8 @@ def Main():
       'Data/img',
       'MVC/Search/view/assets/js',
       'MVC/Search',
-      'Task/Search'
+      'Task/Search',
+      'Task/Chat'
     ])
 
     PF.Release()

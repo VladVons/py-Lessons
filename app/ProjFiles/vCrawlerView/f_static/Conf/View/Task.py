@@ -2,4 +2,4 @@
 # Author: Vladimir Vons <VladVons@gmail.com>
 # License: GNU, see LICENSE for more details
 
-plugins= 'Search.SrvView Search.SrvImg'
+plugins= 'Search.SrvView Search.SrvImg Chat'
